@@ -14,11 +14,11 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 
 export const auth = getAuth(app);
 export const googleAuthProvider = new GoogleAuthProvider();
 
 export const firestore = getFirestore(app);
 
-analytics.app.automaticDataCollectionEnabled = true;
+// const analytics = getAnalytics(app);
+// analytics.app.automaticDataCollectionEnabled = true;
