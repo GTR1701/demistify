@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model chapters {
+  chapterID   Int       @id @default(autoincrement())
+  chapterName String    @db.Text
+  courseID    Int
+  route       String    @db.Text
+  courses     courses   @relation(fields: [courseID], references: [courseID], onUpdate: Restrict, map: "chapters_ibfk_1")
+  lessons     lessons[]
+
+  @@index([courseID], map: "courseID")
+}
+
+model courses {
+  courseID   Int        @id @default(autoincrement())
+  courseName String     @db.Text
+  route      String     @db.Text
+  chapters   chapters[]
+}
+
+model lessons {
+  lessonID      Int      @id @default(autoincrement())
+  lessonName    String   @db.Text
+  chapterID     Int
+  lessonContent String   @db.Text
+  route         String   @db.Text
+  chapters      chapters @relation(fields: [chapterID], references: [chapterID], onUpdate: Restrict, map: "lessons_ibfk_1")
+
+  @@index([chapterID], map: "chapterID")
+}
+
+model users {
+  ID       Int    @id @default(autoincrement())
+  uid      String @db.Text
+  username String @db.Text
+  password String @db.Text
+}
