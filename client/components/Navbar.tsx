@@ -17,8 +17,8 @@ import {
   AccordionSummary,
   AccordionDetails,
   Switch,
-  styled,
   FormControlLabel,
+  ListItem,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
@@ -27,6 +27,8 @@ import LoginIcon from "@mui/icons-material/Login";
 import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Accordion from "@mui/material/Accordion";
@@ -34,6 +36,9 @@ import FormGroup from "@mui/material/FormGroup";
 
 type handleDrawer = {
   handleDrawer: () => void;
+  accordionOpen: boolean;
+  setAccordionOpen: () => void;
+  courses: any;
 };
 
 export default function Navbar() {
@@ -42,9 +47,14 @@ export default function Navbar() {
   const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.up("md"));
+  const courses = getCourses();
 
   function handleDrawer(): void {
     setOpen(!open);
+  }
+
+  async function getCourses() {
+    return await fetch("http://localhost:3000/courses");
   }
 
   //implement a dark mode toggle
@@ -87,7 +97,12 @@ export default function Navbar() {
                   Contact
                 </Button>
               </Box>
-              <Box sx={{ marginLeft: "auto", display: "flex" }}>
+              <Box
+                sx={{
+                  marginLeft: "auto",
+                  display: "flex",
+                }}
+              >
                 <FormGroup>
                   <FormControlLabel
                     control={
@@ -98,9 +113,11 @@ export default function Navbar() {
                       />
                     }
                     label={
-                      <Typography>
-                        {darkMode ? "Toggle light mode" : "Toggle dark mode"}
-                      </Typography>
+                      darkMode ? (
+                        <DarkModeIcon sx={{ paddingTop: "6px" }} />
+                      ) : (
+                        <LightModeIcon sx={{ paddingTop: "6px" }} />
+                      )
                     }
                     labelPlacement="start"
                   />
@@ -153,11 +170,11 @@ export default function Navbar() {
                           />
                         }
                         label={
-                          <Typography>
-                            {darkMode
-                              ? "Toggle light mode"
-                              : "Toggle dark mode"}
-                          </Typography>
+                          darkMode ? (
+                            <DarkModeIcon sx={{ paddingTop: "6px" }} />
+                          ) : (
+                            <LightModeIcon sx={{ paddingTop: "6px" }} />
+                          )
                         }
                         labelPlacement="start"
                       />
@@ -194,13 +211,23 @@ export default function Navbar() {
         </Toolbar>
       </AppBar>
       <Drawer anchor="left" open={open} onClose={handleDrawer}>
-        <CustomDrawer handleDrawer={() => handleDrawer()} />
+        <CustomDrawer
+          handleDrawer={() => handleDrawer()}
+          accordionOpen={accordionOpen}
+          setAccordionOpen={() => setAccordionOpen(!accordionOpen)}
+          courses={courses}
+        />
       </Drawer>
     </div>
   );
 }
 
-function CustomDrawer({ handleDrawer }: handleDrawer) {
+function CustomDrawer({
+  handleDrawer,
+  accordionOpen,
+  setAccordionOpen,
+  courses,
+}: handleDrawer) {
   const router = useRouter();
   return (
     <Box
@@ -210,38 +237,56 @@ function CustomDrawer({ handleDrawer }: handleDrawer) {
         color: "black",
       }}
       role="presentation"
-      onClick={handleDrawer}
-      onKeyDown={handleDrawer}
+      backdropOnClick={handleDrawer}
     >
       <List>
-        <ListItemButton key="Home" onClick={() => router.push("/")}>
-          <ListItemIcon>
-            <HomeIcon />
-          </ListItemIcon>
-          <ListItemText primary="Home" />
-        </ListItemButton>
-        <ListItemButton key="About" onClick={() => router.push("/about")}>
-          <ListItemIcon>
-            <InfoIcon />
-          </ListItemIcon>
-          <ListItemText primary="About" />
-        </ListItemButton>
-        <ListItemButton key="Contact" onClick={() => router.push("/contact")}>
-          <ListItemIcon>
-            <AlternateEmailIcon />
-          </ListItemIcon>
-          <ListItemText primary="Contact" />
-        </ListItemButton>
+        <Accordion
+          sx={{ border: "none", boxShadow: "none" }}
+          onClick={setAccordionOpen}
+        >
+          <AccordionSummary>
+            {!accordionOpen ? (
+              <ExpandMoreIcon sx={{ margin: "auto" }} />
+            ) : (
+              <ExpandMoreIcon
+                sx={{ margin: "auto", transform: "rotate(180deg)" }}
+              />
+            )}
+          </AccordionSummary>
+          <AccordionDetails>
+            <List>
+              {courses.map((course: any) => {
+                return (
+                  <Accordion>
+                    <AccordionSummary>
+                      <Typography>{course.name}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <List>
+                        {course.modules.map((module: any) => {
+                          return (
+                            <ListItemButton
+                              onClick={() =>
+                                router.push(
+                                  `/courses/${course.id}/${module.id}`
+                                )
+                              }
+                            >
+                              <ListItemText primary={module.name} />
+                            </ListItemButton>
+                          );
+                        })}
+                      </List>
+                    </AccordionDetails>
+                  </Accordion>
+                );
+              })}
+            </List>
+          </AccordionDetails>
+        </Accordion>
       </List>
       <Divider />
-      <List>
-        <ListItemButton key="Login" onClick={() => router.push("/login")}>
-          <ListItemIcon>
-            <VpnKeyIcon />
-          </ListItemIcon>
-          <ListItemText primary="Login" />
-        </ListItemButton>
-      </List>
+      {/* <List></List> */}
     </Box>
   );
 }
