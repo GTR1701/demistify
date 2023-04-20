@@ -8,12 +8,12 @@ datasource db {
 }
 
 model chapters {
-  chapterID   Int       @id @default(autoincrement())
-  chapterName String    @db.Text
+  chapterID   Int           @id @default(autoincrement())
+  chapterName String        @db.Text
   courseID    Int
-  route       String    @db.Text
-  courses     courses   @relation(fields: [courseID], references: [courseID], onUpdate: Restrict, map: "chapters_ibfk_1")
-  lessons     lessons[]
+  route       String        @db.Text
+  courses     courses       @relation(fields: [courseID], references: [courseID], onUpdate: Restrict, map: "chapters_ibfk_1")
+  lessonnames lessonnames[]
 
   @@index([courseID], map: "courseID")
 }
@@ -26,14 +26,11 @@ model courses {
 }
 
 model lessons {
-  lessonID      Int      @id @default(autoincrement())
-  lessonName    String   @db.Text
-  chapterID     Int
-  lessonContent String   @db.Text
-  route         String   @db.Text
-  chapters      chapters @relation(fields: [chapterID], references: [chapterID], onUpdate: Restrict, map: "lessons_ibfk_1")
-
-  @@index([chapterID], map: "chapterID")
+  lessonID      Int         @id @default(autoincrement())
+  lessonName    Int
+  lessonContent String      @db.Text
+  route         String      @db.Text
+  lessonnames   lessonnames @relation(fields: [lessonID], references: [lessonNameID], onUpdate: Restrict, map: "lessons_ibfk_2")
 }
 
 model users {
@@ -41,4 +38,15 @@ model users {
   uid      String @db.Text
   username String @db.Text
   password String @db.Text
+}
+
+model lessonnames {
+  lessonNameID Int      @id @default(autoincrement())
+  lessonName   String   @db.Text
+  chapterID    Int
+  route        String   @db.VarChar(255)
+  chapters     chapters @relation(fields: [chapterID], references: [chapterID], onUpdate: Restrict, map: "lessonnames_ibfk_1")
+  lessons      lessons?
+
+  @@index([chapterID], map: "chapterID")
 }

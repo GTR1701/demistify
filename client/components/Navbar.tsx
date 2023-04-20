@@ -30,32 +30,62 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Accordion from "@mui/material/Accordion";
 import FormGroup from "@mui/material/FormGroup";
+import axios from "axios";
 
-type handleDrawer = {
-  handleDrawer: () => void;
-  accordionOpen: boolean;
-  setAccordionOpen: () => void;
-  courses: any;
+type Drawer = {
+  courses: any[];
+  chapters: any[];
+  lessons: any[];
 };
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [accordionOpen, setAccordionOpen] = useState(false);
+  const [courses, setCourses] = useState([]);
+  const [chapters, setChapters] = useState([]);
+  const [lessons, setLessons] = useState([]);
   const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.up("md"));
-  const courses = getCourses();
 
   function handleDrawer(): void {
     setOpen(!open);
   }
 
-  async function getCourses() {
-    return await fetch("http://localhost:3000/courses");
+  async function getCourseList() {
+    const courseList = await (
+      await axios.get("http://localhost:4000/courses/all")
+    ).data;
+    console.log(courseList);
+    return courseList;
   }
+
+  async function getChapterList() {
+    const chapterList = await (
+      await axios.get("http://localhost:4000/chapters/1")
+    ).data;
+    console.log(chapterList);
+    return chapterList;
+  }
+
+  async function getLessonList() {
+    const lessonList = await (
+      await axios.get("http://localhost:4000/lessons/1")
+    ).data;
+    console.log(lessonList);
+    return lessonList;
+  }
+
+  useEffect(() => {
+    (async () => {
+      setCourses(await getCourseList());
+      setChapters(await getChapterList());
+      setLessons(await getLessonList());
+    })();
+  }, []);
 
   //implement a dark mode toggle
   const [darkMode, setDarkMode] = useState(true);
@@ -211,82 +241,127 @@ export default function Navbar() {
         </Toolbar>
       </AppBar>
       <Drawer anchor="left" open={open} onClose={handleDrawer}>
-        <CustomDrawer
-          handleDrawer={() => handleDrawer()}
-          accordionOpen={accordionOpen}
-          setAccordionOpen={() => setAccordionOpen(!accordionOpen)}
-          courses={courses}
-        />
+        <CustomDrawer courses={courses} chapters={chapters} lessons={lessons} />
       </Drawer>
     </div>
   );
 }
 
-function CustomDrawer({
-  handleDrawer,
-  accordionOpen,
-  setAccordionOpen,
-  courses,
-}: handleDrawer) {
-  const router = useRouter();
+function CustomDrawer({ courses, chapters, lessons }: Drawer) {
   return (
-    <Box
+    <List
       sx={{
+        margin: "0",
+        padding: "0",
         width: 250,
-        backgroundColor: "white",
-        color: "black",
+        color: "inherit",
       }}
-      role="presentation"
-      backdropOnClick={handleDrawer}
     >
-      <List>
-        <Accordion
-          sx={{ border: "none", boxShadow: "none" }}
-          onClick={setAccordionOpen}
-        >
-          <AccordionSummary>
-            {!accordionOpen ? (
-              <ExpandMoreIcon sx={{ margin: "auto" }} />
-            ) : (
-              <ExpandMoreIcon
-                sx={{ margin: "auto", transform: "rotate(180deg)" }}
-              />
-            )}
-          </AccordionSummary>
-          <AccordionDetails>
-            <List>
-              {courses.map((course: any) => {
-                return (
-                  <Accordion>
-                    <AccordionSummary>
-                      <Typography>{course.name}</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <List>
-                        {course.modules.map((module: any) => {
-                          return (
-                            <ListItemButton
-                              onClick={() =>
-                                router.push(
-                                  `/courses/${course.id}/${module.id}`
-                                )
-                              }
-                            >
-                              <ListItemText primary={module.name} />
-                            </ListItemButton>
-                          );
-                        })}
-                      </List>
-                    </AccordionDetails>
-                  </Accordion>
-                );
-              })}
-            </List>
-          </AccordionDetails>
-        </Accordion>
-      </List>
-      <Divider />
-      {/* <List></List> */}
-    </Box>
+      {courses.map((course: any) => (
+        <CourseAccordion
+          course={course}
+          chapters={chapters}
+          lessons={lessons}
+          key={course.courseID}
+        />
+      ))}
+    </List>
+
+    // <Divider />
+    // <List></List>
+  );
+}
+
+function CourseAccordion({ course, chapters, lessons }: any) {
+  const [accordionOpen, setAccordionOpen] = useState(false);
+
+  return (
+    <Accordion
+      sx={{ boxShadow: "none" }}
+      onClick={() => setAccordionOpen(!accordionOpen)}
+    >
+      <AccordionSummary>
+        <Typography variant="h5">{course.courseName}</Typography>
+        {!accordionOpen ? (
+          <ExpandMoreIcon
+            sx={{
+              marginTop: "auto",
+              marginBottom: "auto",
+              marginLeft: "auto",
+            }}
+          />
+        ) : (
+          <ExpandMoreIcon
+            sx={{
+              marginTop: "auto",
+              marginBottom: "auto",
+              marginLeft: "auto",
+              transform: "rotate(180deg)",
+            }}
+          />
+        )}
+      </AccordionSummary>
+      <AccordionDetails>
+        <List>
+          {chapters.map((chapter: any) => (
+            <ChapterAccordion
+              course={course}
+              chapter={chapter}
+              lessons={lessons}
+              key={chapter.chapterID}
+            />
+          ))}
+        </List>
+      </AccordionDetails>
+    </Accordion>
+  );
+}
+
+function ChapterAccordion({ course, chapter, lessons }: any) {
+  const [accordionOpen, setAccordionOpen] = useState(false);
+
+  const router = useRouter();
+
+  return (
+    <Accordion
+      sx={{ boxShadow: "none" }}
+      onClick={() => setAccordionOpen(!accordionOpen)}
+    >
+      <AccordionSummary>
+        <Typography variant="h6">{chapter.chapterName}</Typography>
+        {!accordionOpen ? (
+          <ExpandMoreIcon
+            sx={{
+              marginTop: "auto",
+              marginBottom: "auto",
+              marginLeft: "auto",
+            }}
+          />
+        ) : (
+          <ExpandMoreIcon
+            sx={{
+              marginTop: "auto",
+              marginBottom: "auto",
+              marginLeft: "auto",
+              transform: "rotate(180deg)",
+            }}
+          />
+        )}
+      </AccordionSummary>
+      <AccordionDetails>
+        <List>
+          {lessons.map((lesson: any) => (
+            <ListItemButton
+              key={lesson.lessonNameID}
+              onClick={() =>
+                router.push(`${course.route}${chapter.route}${lesson.route}`)
+              }
+            >
+              <Typography>{lesson.lessonName}</Typography>
+            </ListItemButton>
+          ))}
+        </List>
+      </AccordionDetails>
+    </Accordion>
   );
 }
