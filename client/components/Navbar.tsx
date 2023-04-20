@@ -18,7 +18,6 @@ import {
   AccordionDetails,
   Switch,
   FormControlLabel,
-  ListItem,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
@@ -303,14 +302,18 @@ function CourseAccordion({ course, chapters, lessons }: any) {
       </AccordionSummary>
       <AccordionDetails>
         <List>
-          {chapters.map((chapter: any) => (
-            <ChapterAccordion
-              course={course}
-              chapter={chapter}
-              lessons={lessons}
-              key={chapter.chapterID}
-            />
-          ))}
+          {chapters.map((chapter: any) => {
+            if (chapter.courseID == course.courseID) {
+              return (
+                <ChapterAccordion
+                  course={course}
+                  chapter={chapter}
+                  lessons={lessons}
+                  key={chapter.chapterID}
+                />
+              );
+            }
+          })}
         </List>
       </AccordionDetails>
     </Accordion>
@@ -350,16 +353,25 @@ function ChapterAccordion({ course, chapter, lessons }: any) {
       </AccordionSummary>
       <AccordionDetails>
         <List>
-          {lessons.map((lesson: any) => (
-            <ListItemButton
-              key={lesson.lessonNameID}
-              onClick={() =>
-                router.push(`${course.route}${chapter.route}${lesson.route}`)
-              }
-            >
-              <Typography>{lesson.lessonName}</Typography>
-            </ListItemButton>
-          ))}
+          {lessons.map((lesson: any) => {
+            if (
+              lesson.courseID === course.courseID &&
+              lesson.chapterID === chapter.chapterID
+            ) {
+              return (
+                <ListItemButton
+                  key={lesson.lessonNameID}
+                  onClick={() =>
+                    router.push(
+                      `${course.route}${chapter.route}${lesson.route}`
+                    )
+                  }
+                >
+                  <Typography>{lesson.lessonName}</Typography>
+                </ListItemButton>
+              );
+            }
+          })}
         </List>
       </AccordionDetails>
     </Accordion>

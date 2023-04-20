@@ -17,7 +17,8 @@ lessonRouter.get('/:slug', async (req, res) => {
                 chapterID: parseInt(req.params.slug)
             },
             include: {
-                chapters: true
+                chapters: true,
+                courses: true,
             }
         });
         res.json(value);

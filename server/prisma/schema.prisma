@@ -19,10 +19,11 @@ model chapters {
 }
 
 model courses {
-  courseID   Int        @id @default(autoincrement())
-  courseName String     @db.Text
-  route      String     @db.Text
-  chapters   chapters[]
+  courseID    Int           @id @default(autoincrement())
+  courseName  String        @db.Text
+  route       String        @db.Text
+  chapters    chapters[]
+  lessonnames lessonnames[]
 }
 
 model lessons {
@@ -44,9 +45,12 @@ model lessonnames {
   lessonNameID Int      @id @default(autoincrement())
   lessonName   String   @db.Text
   chapterID    Int
+  courseID     Int
   route        String   @db.VarChar(255)
   chapters     chapters @relation(fields: [chapterID], references: [chapterID], onUpdate: Restrict, map: "lessonnames_ibfk_1")
+  courses      courses  @relation(fields: [courseID], references: [courseID], onUpdate: Restrict, map: "lessonnames_ibfk_2")
   lessons      lessons?
 
   @@index([chapterID], map: "chapterID")
+  @@index([courseID], map: "courseID")
 }

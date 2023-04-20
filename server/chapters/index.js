@@ -11,9 +11,7 @@ const chapterRouter = express.Router();
 
 chapterRouter.get('/:slug', async (req, res) => {
     const value = await prisma.chapters.findMany({
-        where: {
-            courseID: parseInt(req.params.slug)
-        },
+
         include: {
             courses: true
         }
