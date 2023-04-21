@@ -23,7 +23,12 @@ lessonRouter.get('/:slug', async (req, res) => {
         });
         res.json(value);
     } else {
-        const value = await prisma.lessons.findMany();
+        const value = await prisma.lessonnames.findMany({
+            include: {
+                chapters: true,
+                courses: true,
+            }
+        });
         res.json(value);
     }
 });

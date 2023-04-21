@@ -32,7 +32,11 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Accordion from "@mui/material/Accordion";
 import FormGroup from "@mui/material/FormGroup";
-import axios from "axios";
+import {
+  getChapterList,
+  getCourseList,
+  getLessonList,
+} from "../lib/apiFunctions";
 
 type Drawer = {
   courses: any[];
@@ -54,30 +58,6 @@ export default function Navbar() {
     setOpen(!open);
   }
 
-  async function getCourseList() {
-    const courseList = await (
-      await axios.get("http://localhost:4000/courses/all")
-    ).data;
-    console.log(courseList);
-    return courseList;
-  }
-
-  async function getChapterList() {
-    const chapterList = await (
-      await axios.get("http://localhost:4000/chapters/1")
-    ).data;
-    console.log(chapterList);
-    return chapterList;
-  }
-
-  async function getLessonList() {
-    const lessonList = await (
-      await axios.get("http://localhost:4000/lessons/1")
-    ).data;
-    console.log(lessonList);
-    return lessonList;
-  }
-
   useEffect(() => {
     (async () => {
       setCourses(await getCourseList());
@@ -86,7 +66,6 @@ export default function Navbar() {
     })();
   }, []);
 
-  //implement a dark mode toggle
   const [darkMode, setDarkMode] = useState(true);
   const handleThemeChange = () => {
     setDarkMode(!darkMode);
@@ -273,6 +252,14 @@ function CustomDrawer({ courses, chapters, lessons }: Drawer) {
 
 function CourseAccordion({ course, chapters, lessons }: any) {
   const [accordionOpen, setAccordionOpen] = useState(false);
+  const theme = useTheme();
+
+  let bgColor: string;
+  if (course.courseID % 2 == 1) {
+    bgColor = theme.palette.primary.light;
+  } else {
+    bgColor = "ffffff";
+  }
 
   return (
     <Accordion
@@ -309,6 +296,7 @@ function CourseAccordion({ course, chapters, lessons }: any) {
                   course={course}
                   chapter={chapter}
                   lessons={lessons}
+                  bgcolor={bgColor}
                   key={chapter.chapterID}
                 />
               );
@@ -320,7 +308,7 @@ function CourseAccordion({ course, chapters, lessons }: any) {
   );
 }
 
-function ChapterAccordion({ course, chapter, lessons }: any) {
+function ChapterAccordion({ course, chapter, lessons, bgcolor }: any) {
   const [accordionOpen, setAccordionOpen] = useState(false);
 
   const router = useRouter();
