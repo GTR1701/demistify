@@ -1,26 +1,18 @@
-import axios from "axios";
-
 async function getCourseList() {
-  const courseList = await (
-    await axios.get("http://localhost:4000/courses/all")
-  ).data;
-  console.log(courseList);
+  const response = await fetch("http://localhost:3000/api/courses");
+  const courseList = await response.json();
   return courseList;
 }
 
 async function getChapterList() {
-  const chapterList = await (
-    await axios.get("http://localhost:4000/chapters/1")
-  ).data;
-  console.log(chapterList);
+  const response = await fetch("http://localhost:3000/api/chapters");
+  const chapterList = await response.json();
   return chapterList;
 }
 
 async function getLessonList() {
-  const lessonList = await (
-    await axios.get("http://localhost:4000/lessons/all")
-  ).data;
-  console.log(lessonList);
+  const response = await fetch("http://localhost:3000/api/lessons");
+  const lessonList = await response.json();
   return lessonList;
 }
 

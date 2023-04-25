@@ -1,5 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -24,6 +23,6 @@ export default async function handler(
       courses: true,
     },
   });
-  res.status(200).json(value);
+  res.status(200).send(value);
   //   }
 }

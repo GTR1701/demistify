@@ -1,13 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
-import type { NextApiRequest, NextApiResponse } from "next";
+import { prisma } from "@/lib/prisma";
 
-type Data = {
-  chapterID: number;
-  chapterName: string;
-  courseID: number;
-  route: string;
-};
+import type { NextApiRequest, NextApiResponse } from "next";
 
 // chapterRouter.post('/all', async (req, res) => {
 //     const value = await prisma.chapters.findMany();
@@ -23,7 +16,7 @@ export default async function handler(
       courses: true,
     },
   });
-  res.status(200).json(value);
+  res.status(200).send(value);
 
   // const value = await prisma.chapters.findMany({
   //     where: {
