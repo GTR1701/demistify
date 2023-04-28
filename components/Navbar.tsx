@@ -74,16 +74,6 @@ export default function Navbar(props: HomeProps) {
   }, []);
 
   const [darkMode, setDarkMode] = useState(true);
-  // const handleThemeChange = () => {
-  //   setDarkMode(!darkMode);
-  //   if (darkMode) {
-  //     theme.palette.mode = "dark";
-  //     currentTheme.mode = theme.palette.mode;
-  //   } else {
-  //     theme.palette.mode = "light";
-  //     currentTheme.switchTheme();
-  //   }
-  // };
 
   const label = { inputProps: { "aria-label": "Dark mode" } };
 
@@ -130,7 +120,7 @@ export default function Navbar(props: HomeProps) {
                       />
                     }
                     label={
-                      darkMode ? (
+                      theme.palette.mode === "dark" ? (
                         <DarkModeIcon sx={{ paddingTop: "6px" }} />
                       ) : (
                         <LightModeIcon sx={{ paddingTop: "6px" }} />
@@ -187,7 +177,7 @@ export default function Navbar(props: HomeProps) {
                           />
                         }
                         label={
-                          darkMode ? (
+                          theme.palette.mode === "dark" ? (
                             <DarkModeIcon sx={{ paddingTop: "6px" }} />
                           ) : (
                             <LightModeIcon sx={{ paddingTop: "6px" }} />
