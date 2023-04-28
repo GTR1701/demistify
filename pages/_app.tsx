@@ -4,6 +4,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { CssBaseline, PaletteMode } from "@mui/material";
 import { amber, blue, grey } from "@mui/material/colors";
 import { ThemeContext } from "@/lib/context";
+import Navbar from "@/components/Navbar";
 
 const getDesignTokens = (mode: PaletteMode) => ({
   palette: {
@@ -55,6 +56,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <ThemeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
+        <Navbar />
         <Component {...pageProps} />
       </ThemeProvider>
     </ThemeContext.Provider>

@@ -1,9 +1,5 @@
 import Navbar from "@/components/Navbar";
 
 export default function JS() {
-  return (
-    <>
-      <Navbar />
-    </>
-  );
+  return <></>;
 }
