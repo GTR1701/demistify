@@ -18,6 +18,7 @@ import {
   AccordionDetails,
   Switch,
   FormControlLabel,
+  createTheme,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
@@ -29,7 +30,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Accordion from "@mui/material/Accordion";
 import FormGroup from "@mui/material/FormGroup";
 import {
@@ -37,6 +38,7 @@ import {
   getCourseList,
   getLessonList,
 } from "../lib/apiFunctions";
+import { ThemeContext } from "@/lib/context";
 
 type Drawer = {
   courses: any[];
@@ -44,7 +46,11 @@ type Drawer = {
   lessons: any[];
 };
 
-export default function Navbar() {
+type HomeProps = {
+  toggleTheme?: React.MouseEventHandler<HTMLButtonElement>;
+};
+
+export default function Navbar(props: HomeProps) {
   const [open, setOpen] = useState(false);
   const [accordionOpen, setAccordionOpen] = useState(false);
   const [courses, setCourses] = useState([]);
@@ -53,6 +59,7 @@ export default function Navbar() {
   const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.up("md"));
+  let myTheme = useContext(ThemeContext);
 
   function handleDrawer(): void {
     setOpen(!open);
@@ -67,14 +74,16 @@ export default function Navbar() {
   }, []);
 
   const [darkMode, setDarkMode] = useState(true);
-  const handleThemeChange = () => {
-    setDarkMode(!darkMode);
-    if (darkMode) {
-      theme.palette.mode = "dark";
-    } else {
-      theme.palette.mode = "light";
-    }
-  };
+  // const handleThemeChange = () => {
+  //   setDarkMode(!darkMode);
+  //   if (darkMode) {
+  //     theme.palette.mode = "dark";
+  //     currentTheme.mode = theme.palette.mode;
+  //   } else {
+  //     theme.palette.mode = "light";
+  //     currentTheme.switchTheme();
+  //   }
+  // };
 
   const label = { inputProps: { "aria-label": "Dark mode" } };
 
@@ -116,7 +125,7 @@ export default function Navbar() {
                     control={
                       <Switch
                         {...label}
-                        onChange={() => handleThemeChange()}
+                        onChange={() => myTheme.toggleColorMode()}
                         color={darkMode ? "default" : "secondary"}
                       />
                     }
@@ -173,7 +182,7 @@ export default function Navbar() {
                         control={
                           <Switch
                             {...label}
-                            onChange={() => handleThemeChange()}
+                            onChange={() => myTheme.toggleColorMode()}
                             color={darkMode ? "default" : "secondary"}
                           />
                         }
