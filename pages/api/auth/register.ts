@@ -7,21 +7,24 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const username = req.body.username;
-  const password = req.body.password;
+  const username = String(req.body.login);
+  const password = String(req.body.password);
+  const email = String(req.body.email);
+  console.log(username, password, email);
   const uid = getUuid(username);
 
   bcrypt.hash(password, 10, async (err, hash) => {
     if (err) {
       console.log(err);
     }
-    const value = await prisma.users.create({
+    await prisma.users.create({
       data: {
         username: username,
         password: hash,
+        email: email,
         uid: uid,
       },
     });
-    res.status(200).send(value);
+    res.status(200);
   });
 }

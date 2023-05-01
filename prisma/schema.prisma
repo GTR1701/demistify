@@ -39,6 +39,7 @@ model users {
   uid      String @db.Text
   username String @db.Text
   password String @db.Text
+  email    String @db.Text
 }
 
 model lessonnames {

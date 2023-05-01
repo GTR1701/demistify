@@ -1,10 +1,22 @@
+import { AuthForm } from "@/components/authForm";
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import axios from "axios";
+
+interface Data {
+  login: string;
+  password: string;
+  email: string;
+}
 
 export default function Login() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  async function sendData({ login, password, email }: Data) {
+    await axios.post("/api/auth/register", { login, password, email });
+  }
 
   return (
     <>
@@ -14,7 +26,7 @@ export default function Login() {
             margin: "10vh auto",
             backgroundColor: theme.palette.primary.light,
             width: "30%",
-            height: "80vh",
+            height: "max-content",
             borderRadius: "25px",
             boxShadow: "8px 8px 24px 0px rgba(66, 68, 90, 1)",
           }}
@@ -25,6 +37,11 @@ export default function Login() {
           >
             Login
           </Typography>
+          <AuthForm
+            onSubmit={({ login, password, email }) => {
+              sendData({ login, password, email });
+            }}
+          />
         </Box>
       ) : (
         <Box>
@@ -34,6 +51,9 @@ export default function Login() {
           >
             Login
           </Typography>
+          <AuthForm
+            onSubmit={({ login, password, passwordRepeat, email }) => {}}
+          />
         </Box>
       )}
     </>
