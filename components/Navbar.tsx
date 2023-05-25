@@ -1,44 +1,36 @@
 //MUI responsive navbar in nextjs13 with typescript and mui
+import { ThemeContext } from "@/lib/context";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import LoginIcon from "@mui/icons-material/Login";
+import MenuIcon from "@mui/icons-material/Menu";
 import {
+  AccordionDetails,
+  AccordionSummary,
   AppBar,
+  Box,
+  Button,
+  Drawer,
+  FormControlLabel,
+  IconButton,
+  List,
+  ListItemButton,
+  Switch,
   Toolbar,
   Typography,
-  Button,
-  IconButton,
   useMediaQuery,
   useTheme,
-  Drawer,
-  List,
-  ListItemText,
-  ListItemIcon,
-  Divider,
-  Box,
-  ListItemButton,
-  AccordionSummary,
-  AccordionDetails,
-  Switch,
-  FormControlLabel,
-  createTheme,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import HomeIcon from "@mui/icons-material/Home";
-import InfoIcon from "@mui/icons-material/Info";
-import LoginIcon from "@mui/icons-material/Login";
-import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
-import VpnKeyIcon from "@mui/icons-material/VpnKey";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import LightModeIcon from "@mui/icons-material/LightMode";
-import { useRouter } from "next/router";
-import { useEffect, useState, useContext } from "react";
 import Accordion from "@mui/material/Accordion";
 import FormGroup from "@mui/material/FormGroup";
+import { useRouter } from "next/router";
+import { useContext, useEffect, useState } from "react";
 import {
   getChapterList,
   getCourseList,
   getLessonList,
 } from "../lib/apiFunctions";
-import { ThemeContext } from "@/lib/context";
 
 type Drawer = {
   courses: any[];
