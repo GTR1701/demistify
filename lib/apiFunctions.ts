@@ -7,13 +7,17 @@ async function getCourseList() {
 }
 
 async function getChapterList() {
-  const response = await fetch("http://localhost:8000/chapters/");
+  const response = await fetch("http://localhost:8000/chapters/", {
+    mode: "cors",
+  });
   const chapterList = await response.json();
   return chapterList;
 }
 
 async function getLessonList() {
-  const response = await fetch("http://localhost:8000/lessons/");
+  const response = await fetch("http://localhost:8000/lessons/", {
+    mode: "cors",
+  });
   const lessonList = await response.json();
   return lessonList;
 }
