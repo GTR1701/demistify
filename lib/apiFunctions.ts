@@ -1,5 +1,5 @@
 async function getCourseList() {
-  const response = await fetch("http://localhost:8000/courses/", {
+  const response = await fetch("http://demistify.pl/api/courses/", {
     mode: "cors",
   });
   const courseList = await response.json();
@@ -7,7 +7,7 @@ async function getCourseList() {
 }
 
 async function getChapterList() {
-  const response = await fetch("http://localhost:8000/chapters/", {
+  const response = await fetch("http://demistify.pl/api/chapters/", {
     mode: "cors",
   });
   const chapterList = await response.json();
@@ -15,7 +15,7 @@ async function getChapterList() {
 }
 
 async function getLessonList() {
-  const response = await fetch("http://localhost:8000/lessons/", {
+  const response = await fetch("http://demistify.pl/api/lessons/", {
     mode: "cors",
   });
   const lessonList = await response.json();
