@@ -1,5 +1,13 @@
+import axios from "axios";
+
+interface Data {
+  login: string;
+  password: string;
+  email: string;
+}
+
 async function getCourseList() {
-  const response = await fetch("http://demistify.pl/api/courses/", {
+  const response = await fetch("http://demistify.pl/api/courses", {
     mode: "cors",
   });
   const courseList = await response.json();
@@ -7,7 +15,7 @@ async function getCourseList() {
 }
 
 async function getChapterList() {
-  const response = await fetch("http://demistify.pl/api/chapters/", {
+  const response = await fetch("http://demistify.pl/api/chapters", {
     mode: "cors",
   });
   const chapterList = await response.json();
@@ -15,11 +23,19 @@ async function getChapterList() {
 }
 
 async function getLessonList() {
-  const response = await fetch("http://demistify.pl/api/lessons/", {
+  const response = await fetch("http://demistify.pl/api/lessons", {
     mode: "cors",
   });
   const lessonList = await response.json();
   return lessonList;
 }
 
-export { getCourseList, getChapterList, getLessonList };
+async function sendData({ login, password, email }: Data) {
+  await axios.post("http://demistify.pl/api/auth/register", {
+    login,
+    password,
+    email,
+  });
+}
+
+export { getCourseList, getChapterList, getLessonList, sendData };

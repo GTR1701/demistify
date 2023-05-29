@@ -2,21 +2,45 @@ import { AuthForm } from "@/components/authForm";
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import axios from "axios";
+import { sendData } from "@/lib/apiFunctions";
+import { useRouter } from "next/dist/client/router";
 
 interface Data {
   login: string;
   password: string;
+  passwordRepeat: string;
   email: string;
 }
 
 export default function Login() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const router = useRouter();
 
-  async function sendData({ login, password, email }: Data) {
-    await axios.post("/api/auth/register", { login, password, email });
-  }
+  const sanitizeData = ({ login, password, passwordRepeat, email }: Data) => {
+    let counter = 0;
+    if (login.length < 3) {
+      alert("Login must be at least 3 characters long");
+      return;
+    } else counter++;
+    if (password.length < 8) {
+      alert("Password must be at least 8 characters long");
+      return;
+    } else counter++;
+    if (passwordRepeat !== password) {
+      alert("Passwords must match");
+      return;
+    } else counter++;
+    if (!email.includes("@")) {
+      alert("Email must contain @");
+      return;
+    } else counter++;
+    if (counter === 4) {
+      sendData({ login, password, email });
+      counter = 0;
+      router.push("/");
+    }
+  };
 
   return (
     <>
@@ -38,8 +62,8 @@ export default function Login() {
             Login
           </Typography>
           <AuthForm
-            onSubmit={({ login, password, email }) => {
-              sendData({ login, password, email });
+            onSubmit={({ login, password, passwordRepeat, email }) => {
+              sanitizeData({ login, password, passwordRepeat, email });
             }}
           />
         </Box>
