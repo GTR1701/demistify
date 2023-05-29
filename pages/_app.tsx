@@ -21,11 +21,11 @@ const getDesignTokens = (mode: PaletteMode) => ({
         }
       : {
           // palette values for dark mode
-          primary: purple,
+          primary: blue,
           divider: blue[700],
           background: {
             default: grey[900],
-            paper: blue[900],
+            paper: purple[900],
           },
           text: {
             primary: "#fff",
