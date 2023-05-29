@@ -35,11 +35,15 @@ model lessons {
 }
 
 model users {
-  ID       Int    @id @default(autoincrement())
-  uid      String @db.Text
-  username String @db.Text
-  password String @db.Text
-  email    String @db.Text
+  ID        Int     @id @default(autoincrement())
+  uid       String  @db.Text
+  username  String  @db.Text
+  password  String  @db.Text
+  email     String  @db.Text
+  hasJS     Boolean @default(dbgenerated("(b'0')")) @db.Bit(1)
+  hasReact  Boolean @default(dbgenerated("(b'0')")) @db.Bit(1)
+  hasPython Boolean @default(dbgenerated("(b'0')")) @db.Bit(1)
+  hasNode   Boolean @default(dbgenerated("(b'0')")) @db.Bit(1)
 }
 
 model lessonnames {
