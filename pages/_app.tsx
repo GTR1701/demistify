@@ -2,7 +2,7 @@ import { useMemo, useState, useContext } from "react";
 import type { AppProps } from "next/app";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { CssBaseline, PaletteMode } from "@mui/material";
-import { amber, blue, grey } from "@mui/material/colors";
+import { amber, blue, grey, purple } from "@mui/material/colors";
 import { ThemeContext } from "@/lib/context";
 import Navbar from "@/components/Navbar";
 
@@ -21,7 +21,7 @@ const getDesignTokens = (mode: PaletteMode) => ({
         }
       : {
           // palette values for dark mode
-          primary: blue,
+          primary: purple,
           divider: blue[700],
           background: {
             default: grey[900],
