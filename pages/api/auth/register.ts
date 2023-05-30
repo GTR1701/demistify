@@ -39,6 +39,6 @@ export default async function handler(
         uid: uid,
       },
     });
-    res.status(200);
+    res.status(200).json({ message: "Użytkownik został utworzony" });
   });
 }

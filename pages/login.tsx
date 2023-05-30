@@ -43,7 +43,7 @@ export default function Login() {
     } else counter++;
     if (counter === 4) {
       const res = await sendData({ login, password, email });
-      if (res.data) {
+      if (res.data.message !== "Użytkownik został utworzony") {
         alert(res.data.message);
       } else {
         counter = 0;
