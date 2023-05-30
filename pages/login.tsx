@@ -43,11 +43,11 @@ export default function Login() {
     } else counter++;
     if (counter === 4) {
       const res = await sendData({ login, password, email });
-      if (!res.data) {
+      if (res.data) {
+        alert(res.data.message);
+      } else {
         counter = 0;
         router.push("/");
-      } else {
-        alert(res.data.message);
       }
     }
   };
