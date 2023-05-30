@@ -4,6 +4,7 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { sendData } from "@/lib/apiFunctions";
 import { useRouter } from "next/dist/client/router";
+import { prisma } from "@/prisma/prisma";
 
 interface Data {
   login: string;
@@ -35,7 +36,17 @@ export default function Login() {
       alert("Email must contain @");
       return;
     } else counter++;
-    if (counter === 4) {
+    const userExists = prisma.users.findUnique({ where: { login } });
+    const emailExists = prisma.users.findUnique({ where: { email } });
+    if (userExists == login) {
+      alert("User with this login already exists");
+      return;
+    } else counter++;
+    if (emailExists == email) {
+      alert("User with this email already exists");
+      return;
+    } else counter++;
+    if (counter === 6) {
       sendData({ login, password, email });
       counter = 0;
       router.push("/");
@@ -48,7 +59,10 @@ export default function Login() {
         <Box
           sx={{
             margin: "10vh auto",
-            backgroundColor: theme.palette.primary.light,
+            background:
+              theme.palette.mode === "light"
+                ? "linear-gradient(135deg, rgba(0,74,255,1) 0%, rgba(171,71,188,1) 93%)"
+                : "linear-gradient(315deg, rgba(0,146,255,1) 7%, rgba(90,41,150,1) 83%)",
             width: "30%",
             height: "max-content",
             borderRadius: "25px",

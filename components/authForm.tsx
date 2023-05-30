@@ -2,6 +2,7 @@ import * as React from "react";
 import { Formik, Form, FieldProps, Field } from "formik";
 import { Button, TextField, Box } from "@mui/material";
 import { TextFieldProps } from "@mui/material/TextField";
+import { useTheme } from "@mui/material/styles";
 
 interface Values {
   login: string;
@@ -15,6 +16,7 @@ interface AuthFormProps {
 }
 
 export const AuthForm: React.FC<AuthFormProps> = ({ onSubmit }) => {
+  const theme = useTheme();
   return (
     <Formik
       initialValues={{ login: "", password: "", passwordRepeat: "", email: "" }}
@@ -32,6 +34,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSubmit }) => {
               margin: "auto",
               marginTop: "5rem",
               paddingBottom: "1rem",
+              color: theme.palette.text.primary,
             }}
           >
             <Field name="login" placeholder="login" component={myField} />
@@ -47,7 +50,13 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSubmit }) => {
               placeholder="email"
               component={myField}
             />
-            <Button type="submit">Submit</Button>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{ backgroundColor: "transparent" }}
+            >
+              Submit
+            </Button>
           </Box>
         </Form>
       )}

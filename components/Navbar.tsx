@@ -71,7 +71,10 @@ export default function Navbar(props: HomeProps) {
 
   return (
     <div>
-      <AppBar position="static">
+      <AppBar
+        position="static"
+        sx={{ backgroundColor: theme.palette.background.paper }}
+      >
         <Toolbar>
           <IconButton
             size="large"
@@ -108,7 +111,7 @@ export default function Navbar(props: HomeProps) {
                       <Switch
                         {...label}
                         onChange={() => myTheme.toggleColorMode()}
-                        color={darkMode ? "default" : "secondary"}
+                        color="default"
                       />
                     }
                     label={
