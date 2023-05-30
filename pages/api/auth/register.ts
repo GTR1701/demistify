@@ -16,13 +16,13 @@ export default async function handler(
   const emailExists = await prisma.users.findFirst({ where: { email } });
   if (userExists) {
     res
-      .status(400)
+      .status(200)
       .json({ message: "Użytkownik o podanym loginie już istnieje" });
     return;
   }
   if (emailExists) {
     res
-      .status(400)
+      .status(200)
       .json({ message: "Użytkownik o podanym mailu już istnieje" });
     return;
   }

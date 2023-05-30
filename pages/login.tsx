@@ -43,10 +43,10 @@ export default function Login() {
     } else counter++;
     if (counter === 4) {
       const res = await sendData({ login, password, email });
-      if (res.status === 200) {
+      if (!res.data) {
         counter = 0;
         router.push("/");
-      } else if (res.status === 400) {
+      } else {
         alert(res.data.message);
       }
     }
