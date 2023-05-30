@@ -18,7 +18,12 @@ export default function Login() {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const router = useRouter();
 
-  const sanitizeData = ({ login, password, passwordRepeat, email }: Data) => {
+  const sanitizeData = async ({
+    login,
+    password,
+    passwordRepeat,
+    email,
+  }: Data) => {
     let counter = 0;
     if (login.length < 3) {
       alert("Login must be at least 3 characters long");
@@ -36,20 +41,14 @@ export default function Login() {
       alert("Email must contain @");
       return;
     } else counter++;
-    const userExists = prisma.users.findUnique({ where: { login } });
-    const emailExists = prisma.users.findUnique({ where: { email } });
-    if (userExists == login) {
-      alert("User with this login already exists");
-      return;
-    } else counter++;
-    if (emailExists == email) {
-      alert("User with this email already exists");
-      return;
-    } else counter++;
-    if (counter === 6) {
-      sendData({ login, password, email });
-      counter = 0;
-      router.push("/");
+    if (counter === 4) {
+      const res = await sendData({ login, password, email });
+      if (res.status === 200) {
+        counter = 0;
+        router.push("/");
+      } else if (res.status === 400) {
+        alert(res.data.message);
+      }
     }
   };
 

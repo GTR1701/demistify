@@ -12,6 +12,20 @@ export default async function handler(
   const email = String(req.body.email);
   console.log(username, password, email);
   const uid = getUuid(username);
+  const userExists = await prisma.users.findFirst({ where: { username } });
+  const emailExists = await prisma.users.findFirst({ where: { email } });
+  if (userExists) {
+    res
+      .status(400)
+      .json({ message: "Użytkownik o podanym loginie już istnieje" });
+    return;
+  }
+  if (emailExists) {
+    res
+      .status(400)
+      .json({ message: "Użytkownik o podanym mailu już istnieje" });
+    return;
+  }
 
   bcrypt.hash(password, 10, async (err, hash) => {
     if (err) {

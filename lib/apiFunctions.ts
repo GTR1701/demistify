@@ -31,11 +31,12 @@ async function getLessonList() {
 }
 
 async function sendData({ login, password, email }: Data) {
-  await axios.post("http://demistify.pl/api/auth/register", {
+  const res = await axios.post("http://demistify.pl/api/auth/register", {
     login,
     password,
     email,
   });
+  return res;
 }
 
 export { getCourseList, getChapterList, getLessonList, sendData };
