@@ -43,6 +43,7 @@ async function callRegisterUser({ login, password, email }: Data) {
 }
 
 async function callLoginUser({ login, password }: LoginData) {
+  console.log(login, password);
   const res = await axios.post("http://demistify.pl/api/auth/login", {
     login,
     password,

@@ -24,6 +24,7 @@ export default function Login() {
   const [field2text, setField2text] = useState("");
 
   const logIn = async ({ login, password }: Data) => {
+    console.log(login, password);
     const res = await callLoginUser({ login, password });
     if (res.data === "User not found") {
       setField1(true);
