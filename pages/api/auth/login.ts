@@ -8,7 +8,6 @@ export default async function handler(
 ) {
   const username = req.body.login;
   const password = req.body.password;
-  console.log(username, password);
   const user = await prisma.users.findMany({
     where: {
       OR: [
@@ -21,7 +20,6 @@ export default async function handler(
       ],
     },
   });
-  console.log(user);
   if (!user) {
     res.send("User not found");
     return;
