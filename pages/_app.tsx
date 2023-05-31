@@ -71,7 +71,7 @@ export default function App({ Component, pageProps }: AppProps) {
       value={{
         uid: "",
         username: "",
-        update: (newUid, newUsername) => {
+        update: async (newUid, newUsername) => {
           setUid(newUid);
           setUsername(newUsername);
         },
