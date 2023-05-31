@@ -9,4 +9,8 @@ export const AccordionContext = createContext({
   setAccordionState: (state: boolean) => {},
 });
 
-export const UserContext = createContext({ uid: "", username: "" });
+export const UserContext = createContext({
+  uid: "",
+  username: "",
+  update: (newUid: string, newUsername: string) => {},
+});

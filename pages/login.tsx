@@ -3,9 +3,10 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { callLoginUser } from "@/lib/apiFunctions";
 import { useRouter } from "next/dist/client/router";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { LoginForm } from "@/components/LoginForm";
 import Link from "next/link";
+import { UserContext } from "@/lib/context";
 
 interface Data {
   login: string;
@@ -30,6 +31,8 @@ export default function Login() {
       setField2(true);
       setField2text("Niepoprawne hasło");
     } else if (res.status === 200) {
+      const { uid, username, update } = useContext(UserContext);
+      update(res.data.uid, res.data.username);
       router.push("/dashboard");
     }
   };

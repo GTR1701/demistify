@@ -7,6 +7,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { username, password } = req.body;
+  console.log(req.body);
   const user = await prisma.users.findFirst({
     where: {
       OR: [
@@ -19,6 +20,7 @@ export default async function handler(
       ],
     },
   });
+  console.log(user);
   if (!user) {
     res.send("User not found");
     return;

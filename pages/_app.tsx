@@ -63,9 +63,20 @@ export default function App({ Component, pageProps }: AppProps) {
   // Update the theme only if the mode changes
   const theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
   const [accordionState, setAccordionState] = useState(false);
+  const [uid, setUid] = useState("");
+  const [username, setUsername] = useState("");
 
   return (
-    <UserContext.Provider value={{ uid: "", username: "" }}>
+    <UserContext.Provider
+      value={{
+        uid: "",
+        username: "",
+        update: (newUid, newUsername) => {
+          setUid(newUid);
+          setUsername(newUsername);
+        },
+      }}
+    >
       <ThemeContext.Provider value={colorMode}>
         <AccordionContext.Provider
           value={{ accordionState, setAccordionState }}
