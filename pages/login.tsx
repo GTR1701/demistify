@@ -23,10 +23,10 @@ export default function Login() {
 
   const logIn = async ({ login, password }: Data) => {
     const res = await callLoginUser({ login, password });
-    if (res.status === 404) {
+    if (res.data === "User not found") {
       setField1(true);
       setField1text("Niepoprawna nazwa użytkownika lub email");
-    } else if (res.status === 401) {
+    } else if (res.data === "Invalid password") {
       setField2(true);
       setField2text("Niepoprawne hasło");
     } else if (res.status === 200) {

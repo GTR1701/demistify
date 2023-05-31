@@ -5,6 +5,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { callRegisterUser } from "@/lib/apiFunctions";
 import { useRouter } from "next/dist/client/router";
 import { useState } from "react";
+import Link from "next/link";
 
 interface Data {
   login: string;
@@ -111,6 +112,15 @@ export default function Login() {
             }}
           >
             Zarejestruj się
+          </Typography>
+          <Typography
+            variant="h6"
+            sx={{ margin: "0 auto", width: "90%", padding: "2rem 0 1rem 0" }}
+          >
+            Masz już konto?{" "}
+            <Link style={{ color: "inherit" }} href="/login">
+              Zaloguj się
+            </Link>
           </Typography>
           <RegisterForm
             onSubmit={({ login, password, passwordRepeat, email }) => {

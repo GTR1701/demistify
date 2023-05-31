@@ -32,7 +32,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
               rowGap: "1rem",
               width: "90%",
               margin: "auto",
-              marginTop: "5rem",
+              marginTop: "1rem",
               paddingBottom: "1rem",
               color: theme.palette.text.primary,
             }}

@@ -53,7 +53,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
               variant="contained"
               sx={{ backgroundColor: "transparent" }}
             >
-              Zarejestruj
+              Zaloguj
             </Button>
           </Box>
         </Form>
