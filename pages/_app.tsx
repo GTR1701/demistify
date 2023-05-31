@@ -69,8 +69,8 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <UserContext.Provider
       value={{
-        uid: "",
-        username: "",
+        uid,
+        username,
         update: async (newUid, newUsername) => {
           setUid(newUid);
           setUsername(newUsername);

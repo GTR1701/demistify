@@ -12,7 +12,7 @@ export default function Home(props: HomeProps) {
   return (
     <>
       <Typography variant="h1">
-        {uid}, {username}
+        UID:{uid}, Username: {username}
       </Typography>
     </>
   );
