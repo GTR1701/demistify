@@ -6,7 +6,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { username, password } = req.body;
+  const username = req.body.username;
+  const password = req.body.password;
   console.log(req.body);
   const user = await prisma.users.findFirst({
     where: {
