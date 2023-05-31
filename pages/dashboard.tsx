@@ -11,9 +11,8 @@ export default function Home(props: HomeProps) {
   console.log(uid, username);
   return (
     <>
-      <Typography variant="h3">
-        UID:{uid}, Username: {username}
-      </Typography>
+      <Typography variant="h3">UID:{uid}</Typography>
+      <Typography variant="h3">Username:{username}</Typography>
     </>
   );
 }
