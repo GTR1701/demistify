@@ -14,6 +14,7 @@ interface Data {
 }
 
 export default function Login() {
+  const { uid, username, update } = useContext(UserContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const router = useRouter();
@@ -31,7 +32,6 @@ export default function Login() {
       setField2(true);
       setField2text("Niepoprawne hasło");
     } else if (res.status === 200) {
-      const { uid, username, update } = useContext(UserContext);
       update(res.data.uid, res.data.username);
       router.push("/dashboard");
     }
