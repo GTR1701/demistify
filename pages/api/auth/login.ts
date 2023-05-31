@@ -26,14 +26,14 @@ export default async function handler(
     res.send("User not found");
     return;
   }
-  const valid = await bcrypt.compare(password, user.password);
+  const valid = await bcrypt.compare(password, user[0].password);
   if (!valid) {
     res.send("Invalid password");
     return;
   }
   const value = {
-    uid: user.uid,
-    username: user.username,
+    uid: user[0].uid,
+    username: user[0].username,
   };
   res.status(200).json(value);
 }
