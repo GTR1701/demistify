@@ -9,7 +9,7 @@ export default async function handler(
   const username = req.body.username;
   const password = req.body.password;
   console.log(req.body);
-  const user = await prisma.users.findFirst({
+  const user = await prisma.users.findMany({
     where: {
       OR: [
         {
