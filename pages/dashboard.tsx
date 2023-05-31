@@ -7,7 +7,8 @@ type HomeProps = {
 };
 
 export default function Home(props: HomeProps) {
-  const { uid, username } = useContext(UserContext);
+  const { uid, username, update } = useContext(UserContext);
+  console.log(uid, username);
   return (
     <>
       <Typography variant="h1">
