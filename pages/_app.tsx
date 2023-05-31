@@ -3,7 +3,7 @@ import type { AppProps } from "next/app";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { CssBaseline, PaletteMode } from "@mui/material";
 import { amber, blue, green, grey, purple } from "@mui/material/colors";
-import { ThemeContext } from "@/lib/context";
+import { ThemeContext, AccordionContext, UserContext } from "@/lib/context";
 import Navbar from "@/components/Navbar";
 
 const getDesignTokens = (mode: PaletteMode) => ({
@@ -35,6 +35,13 @@ const getDesignTokens = (mode: PaletteMode) => ({
             primary: "#fff",
             secondary: grey[900],
           },
+          overrides: {
+            MuiInputLabel: {
+              root: {
+                color: "rgba(255, 255, 255, 0.87)",
+              },
+            },
+          },
         }),
   },
 });
@@ -55,14 +62,21 @@ export default function App({ Component, pageProps }: AppProps) {
 
   // Update the theme only if the mode changes
   const theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
+  const [accordionState, setAccordionState] = useState(false);
 
   return (
-    <ThemeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Navbar />
-        <Component {...pageProps} />
-      </ThemeProvider>
-    </ThemeContext.Provider>
+    <UserContext.Provider value={{ uid: "", username: "" }}>
+      <ThemeContext.Provider value={colorMode}>
+        <AccordionContext.Provider
+          value={{ accordionState, setAccordionState }}
+        >
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Navbar />
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </AccordionContext.Provider>
+      </ThemeContext.Provider>
+    </UserContext.Provider>
   );
 }

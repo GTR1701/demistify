@@ -1,15 +1,16 @@
+import { RegisterForm } from "@/components/RegisterForm";
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { callLoginUser } from "@/lib/apiFunctions";
+import { callRegisterUser } from "@/lib/apiFunctions";
 import { useRouter } from "next/dist/client/router";
 import { useState } from "react";
-import { LoginForm } from "@/components/LoginForm";
-import Link from "next/link";
 
 interface Data {
   login: string;
   password: string;
+  passwordRepeat: string;
+  email: string;
 }
 
 export default function Login() {
@@ -20,18 +21,67 @@ export default function Login() {
   const [field1text, setField1text] = useState("");
   const [field2, setField2] = useState(false);
   const [field2text, setField2text] = useState("");
+  const [field3, setField3] = useState(false);
+  const [field3text, setField3text] = useState("");
+  const [field4, setField4] = useState(false);
+  const [field4text, setField4text] = useState("");
 
-  const logIn = async ({ login, password }: Data) => {
-    const res = await callLoginUser({ login, password });
-    if (res.status === 404) {
+  const sanitizeData = async ({
+    login,
+    password,
+    passwordRepeat,
+    email,
+  }: Data) => {
+    let counter = 0;
+    if (login.length < 3) {
       setField1(true);
-      setField1text("Niepoprawna nazwa użytkownika lub email");
-    } else if (res.status === 401) {
-      setField2(true);
-      setField2text("Niepoprawne hasło");
-    } else if (res.status === 200) {
-      router.push("/dashboard");
+      setField1text("Nazwa użytkownika musi mieć co najmniej 3 znaki");
+    } else {
+      counter++;
+      setField1(false);
+      setField1text("");
     }
+    if (password.length < 8) {
+      setField2(true);
+      setField2text("Hasło musi mieć co najmniej 8 znaków");
+    } else {
+      counter++;
+      setField2(false);
+      setField2text("");
+    }
+    if (passwordRepeat !== password) {
+      setField3(true);
+      setField3text("Hasła muszą być takie same");
+    } else {
+      counter++;
+      setField3(false);
+      setField3text("");
+    }
+    if (!email.includes("@" && ".")) {
+      setField4(true);
+      setField4text("Niepoprawny adres email");
+    } else {
+      counter++;
+      setField4(false);
+      setField4text("");
+    }
+    if (counter === 4) {
+      const res = await callRegisterUser({ login, password, email });
+      if (res.data.message !== "Użytkownik został utworzony") {
+        alert(res.data.message);
+      } else {
+        counter = 0;
+        router.push("/");
+        setField1(false);
+        setField1text("");
+        setField2(false);
+        setField2text("");
+        setField3(false);
+        setField3text("");
+        setField4(false);
+        setField4text("");
+      }
+    } else return;
   };
 
   return (
@@ -39,7 +89,7 @@ export default function Login() {
       {!isMobile ? (
         <Box
           sx={{
-            margin: "20vh auto",
+            margin: "10vh auto",
             background:
               theme.palette.mode === "light"
                 ? "linear-gradient(135deg, rgba(0,74,255,1) 0%, rgba(171,71,188,1) 93%)"
@@ -60,25 +110,20 @@ export default function Login() {
               textAlign: "center",
             }}
           >
-            Zaloguj się
+            Zarejestruj się
           </Typography>
-          <Typography
-            variant="h6"
-            sx={{ margin: "0 auto", width: "90%", padding: "2rem 0 1rem 0" }}
-          >
-            Nie masz konta?{" "}
-            <Link style={{ color: "inherit" }} href="/register">
-              Zarejestruj się
-            </Link>
-          </Typography>
-          <LoginForm
-            onSubmit={({ login, password }) => {
-              logIn({ login, password });
+          <RegisterForm
+            onSubmit={({ login, password, passwordRepeat, email }) => {
+              sanitizeData({ login, password, passwordRepeat, email });
             }}
             field1={field1}
             field2={field2}
+            field3={field3}
+            field4={field4}
             field1text={field1text}
             field2text={field2text}
+            field3text={field3text}
+            field4text={field4text}
           />
         </Box>
       ) : (
@@ -105,16 +150,20 @@ export default function Login() {
               textAlign: "center",
             }}
           >
-            Zaloguj się
+            Zarejestruj się
           </Typography>
-          <LoginForm
-            onSubmit={({ login, password }) => {
-              logIn({ login, password });
+          <RegisterForm
+            onSubmit={({ login, password, passwordRepeat, email }) => {
+              sanitizeData({ login, password, passwordRepeat, email });
             }}
             field1={field1}
             field2={field2}
+            field3={field3}
+            field4={field4}
             field1text={field1text}
             field2text={field2text}
+            field3text={field3text}
+            field4text={field4text}
           />
         </Box>
       )}

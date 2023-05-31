@@ -31,6 +31,7 @@ import {
   getCourseList,
   getLessonList,
 } from "../lib/apiFunctions";
+import { AccordionContext } from "@/lib/context";
 
 type Drawer = {
   courses: any[];
@@ -43,6 +44,8 @@ type HomeProps = {
 };
 
 export default function Navbar(props: HomeProps) {
+  const { accordionState, setAccordionState } = useContext(AccordionContext);
+
   const [open, setOpen] = useState(false);
   const [accordionOpen, setAccordionOpen] = useState(false);
   const [courses, setCourses] = useState([]);
@@ -135,7 +138,6 @@ export default function Navbar(props: HomeProps) {
               </Box>
             </>
           ) : (
-            //mui accordion menu
             <>
               <Accordion
                 sx={{
@@ -145,14 +147,14 @@ export default function Navbar(props: HomeProps) {
                   boxShadow: "none",
                   color: "inherit",
                 }}
-                onClick={() => setAccordionOpen(!accordionOpen)}
               >
                 <AccordionSummary
                   aria-controls="panel1d-content"
                   id="panel1d-header"
+                  onClick={() => setAccordionState(!accordionState)}
                   sx={{ textAlign: "center", width: "100%" }}
                 >
-                  {!accordionOpen ? (
+                  {!accordionState ? (
                     <ExpandMoreIcon sx={{ margin: "auto" }} />
                   ) : (
                     <ExpandMoreIcon
@@ -167,7 +169,9 @@ export default function Navbar(props: HomeProps) {
                         control={
                           <Switch
                             {...label}
-                            onChange={() => myTheme.toggleColorMode()}
+                            onChange={() => {
+                              myTheme.toggleColorMode();
+                            }}
                             color={darkMode ? "default" : "secondary"}
                           />
                         }

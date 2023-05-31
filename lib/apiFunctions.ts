@@ -1,8 +1,11 @@
 import axios from "axios";
 
-interface Data {
+interface LoginData {
   login: string;
   password: string;
+}
+
+interface Data extends LoginData {
   email: string;
 }
 
@@ -30,7 +33,7 @@ async function getLessonList() {
   return lessonList;
 }
 
-async function sendData({ login, password, email }: Data) {
+async function callRegisterUser({ login, password, email }: Data) {
   const res = await axios.post("http://demistify.pl/api/auth/register", {
     login,
     password,
@@ -39,4 +42,18 @@ async function sendData({ login, password, email }: Data) {
   return res;
 }
 
-export { getCourseList, getChapterList, getLessonList, sendData };
+async function callLoginUser({ login, password }: LoginData) {
+  const res = await axios.post("http://demistify.pl/api/auth/login", {
+    login,
+    password,
+  });
+  return res;
+}
+
+export {
+  getCourseList,
+  getChapterList,
+  getLessonList,
+  callRegisterUser,
+  callLoginUser,
+};
