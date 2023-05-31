@@ -33,8 +33,9 @@ export default function Login() {
       setField2(true);
       setField2text("Niepoprawne hasło");
     } else if (res.status === 200) {
+      console.log(res.data.uid, res.data.username);
       await update(res.data.uid, res.data.username);
-      router.push("/dashboard");
+      // router.push("/dashboard");
     }
   };
 
