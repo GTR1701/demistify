@@ -117,6 +117,15 @@ export default function Login() {
           >
             Zaloguj się
           </Typography>
+          <Typography
+            variant="h6"
+            sx={{ margin: "0 auto", width: "90%", padding: "2rem 0 1rem 0" }}
+          >
+            Nie masz konta?{" "}
+            <Link style={{ color: "inherit" }} href="/register">
+              Zarejestruj się
+            </Link>
+          </Typography>
           <LoginForm
             onSubmit={({ login, password }) => {
               logIn({ login, password });

@@ -10,7 +10,6 @@ export default async function handler(
   const username = String(req.body.login);
   const password = String(req.body.password);
   const email = String(req.body.email);
-  console.log(username, password, email);
   const uid = getUuid(username);
   const userExists = await prisma.users.findFirst({ where: { username } });
   const emailExists = await prisma.users.findFirst({ where: { email } });

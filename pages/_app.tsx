@@ -1,10 +1,10 @@
-import { useMemo, useState, useContext } from "react";
-import type { AppProps } from "next/app";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { CssBaseline, PaletteMode } from "@mui/material";
-import { amber, blue, green, grey, purple } from "@mui/material/colors";
-import { ThemeContext, AccordionContext, UserContext } from "@/lib/context";
 import Navbar from "@/components/Navbar";
+import { AccordionContext, ThemeContext, UserContext } from "@/lib/context";
+import { CssBaseline, PaletteMode } from "@mui/material";
+import { amber, blue, grey, purple } from "@mui/material/colors";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import type { AppProps } from "next/app";
+import { useMemo, useState } from "react";
 
 const getDesignTokens = (mode: PaletteMode) => ({
   palette: {

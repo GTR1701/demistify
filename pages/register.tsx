@@ -162,6 +162,15 @@ export default function Login() {
           >
             Zarejestruj się
           </Typography>
+          <Typography
+            variant="h6"
+            sx={{ margin: "0 auto", width: "90%", padding: "2rem 0 1rem 0" }}
+          >
+            Masz już konto?{" "}
+            <Link style={{ color: "inherit" }} href="/login">
+              Zaloguj się
+            </Link>
+          </Typography>
           <RegisterForm
             onSubmit={({ login, password, passwordRepeat, email }) => {
               sanitizeData({ login, password, passwordRepeat, email });
