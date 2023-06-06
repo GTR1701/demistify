@@ -12,7 +12,7 @@ model chapters {
   chapterName  Int
   courseID     Int
   route        String        @db.Text
-  content      String        @db.VarChar(1000)
+  content      String?       @db.VarChar(1000)
   courses      courses       @relation(fields: [courseID], references: [courseID], onUpdate: Restrict, map: "chapters_ibfk_1")
   chapternames chapternames  @relation(fields: [chapterName], references: [ID], onUpdate: Restrict, map: "chapters_ibfk_2")
   lessonnames  lessonnames[]
