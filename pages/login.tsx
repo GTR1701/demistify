@@ -115,7 +115,7 @@ export default function Login() {
               textAlign: "center",
             }}
           >
-            Zaloguj się
+            Zaloguj się!
           </Typography>
           <Typography
             variant="h6"
