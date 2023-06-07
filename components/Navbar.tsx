@@ -127,14 +127,28 @@ export default function Navbar(props: HomeProps) {
                     labelPlacement="start"
                   />
                 </FormGroup>
-                <Button
-                  color="inherit"
-                  sx={{ marginLeft: "auto" }}
-                  onClick={() => router.push("/login")}
-                >
-                  <LoginIcon />
-                  <Typography sx={{ marginLeft: "0.5rem" }}>Login</Typography>
-                </Button>
+                {!uid ? (
+                  <Button color="inherit" onClick={() => router.push("/login")}>
+                    <LoginIcon />
+                    <Typography sx={{ marginLeft: "0.5rem" }}>
+                      Zaloguj
+                    </Typography>
+                  </Button>
+                ) : (
+                  <Button
+                    color="inherit"
+                    onClick={() => {
+                      localStorage.removeItem("uid");
+                      localStorage.removeItem("username");
+                      update("", "");
+                    }}
+                  >
+                    <LoginIcon />
+                    <Typography sx={{ marginLeft: "0.5rem" }}>
+                      Wyloguj
+                    </Typography>
+                  </Button>
+                )}
               </Box>
             </>
           ) : (
@@ -200,7 +214,7 @@ export default function Navbar(props: HomeProps) {
                     >
                       Contact
                     </Button>
-                    {uid ? (
+                    {!uid ? (
                       <Button
                         color="inherit"
                         onClick={() => router.push("/login")}
