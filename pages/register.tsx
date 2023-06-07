@@ -69,7 +69,6 @@ export default function Login() {
     if (counter === 4) {
       const res = await callRegisterUser({ login, password, email });
       if (res.data.message !== "Użytkownik został utworzony") {
-        alert(res.data.message);
       } else {
         counter = 0;
         router.push("/");
