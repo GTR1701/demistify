@@ -31,7 +31,7 @@ import {
   getCourseList,
   getLessonList,
 } from "../lib/apiFunctions";
-import { AccordionContext } from "@/lib/context";
+import { AccordionContext, UserContext } from "@/lib/context";
 
 type Drawer = {
   courses: any[];
@@ -47,7 +47,6 @@ export default function Navbar(props: HomeProps) {
   const { accordionState, setAccordionState } = useContext(AccordionContext);
 
   const [open, setOpen] = useState(false);
-  const [accordionOpen, setAccordionOpen] = useState(false);
   const [courses, setCourses] = useState([]);
   const [chapters, setChapters] = useState([]);
   const [lessons, setLessons] = useState([]);
@@ -55,6 +54,7 @@ export default function Navbar(props: HomeProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.up("md"));
   let myTheme = useContext(ThemeContext);
+  const { uid, username, update } = useContext(UserContext);
 
   function handleDrawer(): void {
     setOpen(!open);
@@ -200,15 +200,31 @@ export default function Navbar(props: HomeProps) {
                     >
                       Contact
                     </Button>
-                    <Button
-                      color="inherit"
-                      onClick={() => router.push("/login")}
-                    >
-                      <LoginIcon />
-                      <Typography sx={{ marginLeft: "0.5rem" }}>
-                        Login
-                      </Typography>
-                    </Button>
+                    {uid ? (
+                      <Button
+                        color="inherit"
+                        onClick={() => router.push("/login")}
+                      >
+                        <LoginIcon />
+                        <Typography sx={{ marginLeft: "0.5rem" }}>
+                          Zaloguj
+                        </Typography>
+                      </Button>
+                    ) : (
+                      <Button
+                        color="inherit"
+                        onClick={() => {
+                          localStorage.removeItem("uid");
+                          localStorage.removeItem("username");
+                          update("", "");
+                        }}
+                      >
+                        <LoginIcon />
+                        <Typography sx={{ marginLeft: "0.5rem" }}>
+                          Wyloguj
+                        </Typography>
+                      </Button>
+                    )}
                   </Box>
                 </AccordionDetails>
               </Accordion>
