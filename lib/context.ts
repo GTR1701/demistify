@@ -12,5 +12,7 @@ export const AccordionContext = createContext({
 export const UserContext = createContext({
   uid: "",
   username: "",
-  update: async (newUid: string, newUsername: string) => {},
+  update: async (newUid: string, newUsername: string) => {
+    return { newUid, newUsername };
+  },
 });
