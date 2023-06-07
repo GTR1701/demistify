@@ -65,8 +65,9 @@ export default function Navbar(props: HomeProps) {
       setCourses(await getCourseList());
       setChapters(await getChapterList());
       setLessons(await getLessonList());
+      update(uid, username);
     })();
-  }, []);
+  }, [uid, username]);
 
   const [darkMode, setDarkMode] = useState(true);
 
