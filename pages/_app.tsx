@@ -4,7 +4,7 @@ import { CssBaseline, PaletteMode } from "@mui/material";
 import { amber, blue, grey, purple } from "@mui/material/colors";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import type { AppProps } from "next/app";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const getDesignTokens = (mode: PaletteMode) => ({
   palette: {
@@ -65,6 +65,11 @@ export default function App({ Component, pageProps }: AppProps) {
   const [accordionState, setAccordionState] = useState(false);
   const [uid, setUid] = useState("");
   const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    setUid(localStorage.getItem("uid") || "");
+    setUsername(localStorage.getItem("username") || "");
+  }, []);
 
   return (
     <UserContext.Provider
