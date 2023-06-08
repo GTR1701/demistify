@@ -18,6 +18,6 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
     - name: connect and pull
-      run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull https://GTR1701:${{secrets.TOKEN}}@github.com/GTR1701/codetastic && npm i && npx prisma db push --accept-data-loss && npx prisma generate && npm run build && systemctl restart helloworld && exit"
+      run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout ${{ secrets.MAIN_BRANCH }} && git pull https://GTR1701:${{secrets.TOKEN}}@github.com/GTR1701/demistify && npm i && npx prisma db push --accept-data-loss && npx prisma generate && npm run build && systemctl restart helloworld && exit"
     - name: cleanup
       run: rm -rf ~/.ssh
