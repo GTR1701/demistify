@@ -318,14 +318,14 @@ function CourseAccordion({ course, chapters, lessons }: any) {
       <AccordionDetails>
         <List>
           {chapters.map((chapter: any) => {
-            if (chapter.courseID == course.courseID) {
+            if (chapter.courseID == course.ID) {
               return (
                 <ChapterAccordion
                   course={course}
                   chapter={chapter}
                   lessons={lessons}
                   bgcolor={bgColor}
-                  key={chapter.chapterID}
+                  key={chapter.ID}
                 />
               );
             }
@@ -371,8 +371,8 @@ function ChapterAccordion({ course, chapter, lessons, bgcolor }: any) {
         <List>
           {lessons.map((lesson: any) => {
             if (
-              lesson.courseID === course.courseID &&
-              lesson.chapterID === chapter.chapterID
+              lesson.courseID === course.ID &&
+              lesson.chapterID === chapter.ID
             ) {
               return (
                 <ListItemButton
