@@ -17,12 +17,7 @@ export default async function handler(
   //     });
   //     res.json(value);
   //   } else {
-  const value = await prisma.lessonnames.findMany({
-    include: {
-      chapternames: true,
-      coursenames: true,
-    },
-  });
+  const value = await prisma.lessonnames.findMany({});
   res.status(200).send(value);
   //   }
 }
