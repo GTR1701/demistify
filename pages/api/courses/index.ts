@@ -13,7 +13,7 @@ export default async function handler(
   //     });
   //     res.json(value);
   //   } else {
-  const value = await prisma.courses.findMany();
+  const value = await prisma.coursenames.findMany();
   res.status(200).send(value);
   //   }
 }

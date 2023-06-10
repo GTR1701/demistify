@@ -11,9 +11,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const value = await prisma.chapters.findMany({
+  const value = await prisma.chapternames.findMany({
     include: {
-      courses: true,
+      coursenames: true,
     },
   });
   res.status(200).send(value);

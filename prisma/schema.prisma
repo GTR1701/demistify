@@ -8,26 +8,24 @@ datasource db {
 }
 
 model chapters {
-  chapterID    Int           @id @default(autoincrement())
+  chapterID    Int          @id @default(autoincrement())
   chapterName  Int
   courseID     Int
-  route        String        @db.Text
-  content      String?       @db.VarChar(1000)
-  courses      courses       @relation(fields: [courseID], references: [courseID], onUpdate: Restrict, map: "chapters_ibfk_1")
-  chapternames chapternames  @relation(fields: [chapterName], references: [ID], onUpdate: Restrict, map: "chapters_ibfk_2")
-  lessonnames  lessonnames[]
+  route        String       @db.Text
+  content      String?      @db.VarChar(1000)
+  courses      courses      @relation(fields: [courseID], references: [courseID], onUpdate: Restrict, map: "chapters_ibfk_1")
+  chapternames chapternames @relation(fields: [chapterName], references: [ID], onUpdate: Restrict, map: "chapters_ibfk_2")
 
   @@index([courseID], map: "courseID")
   @@index([chapterName], map: "chapters_ibfk_2")
 }
 
 model courses {
-  courseID    Int           @id @default(autoincrement())
+  courseID    Int         @id @default(autoincrement())
   courseName  Int
-  route       String        @db.Text
+  route       String      @db.Text
   chapters    chapters[]
-  coursenames coursenames   @relation(fields: [courseName], references: [ID], onUpdate: Restrict, map: "courses_ibfk_1")
-  lessonnames lessonnames[]
+  coursenames coursenames @relation(fields: [courseName], references: [ID], onUpdate: Restrict, map: "courses_ibfk_1")
 
   @@index([courseName], map: "courses_ibfk_1")
 }
@@ -53,13 +51,13 @@ model users {
 }
 
 model lessonnames {
-  lessonNameID Int      @id @default(autoincrement())
-  lessonName   String   @db.Text
+  lessonNameID Int          @id @default(autoincrement())
+  lessonName   String       @db.Text
   chapterID    Int
   courseID     Int
-  route        String   @db.VarChar(255)
-  chapters     chapters @relation(fields: [chapterID], references: [chapterID], onUpdate: Restrict, map: "lessonnames_ibfk_1")
-  courses      courses  @relation(fields: [courseID], references: [courseID], onUpdate: Restrict, map: "lessonnames_ibfk_2")
+  route        String       @db.VarChar(255)
+  chapters     chapternames @relation(fields: [chapterID], references: [ID], onUpdate: Restrict, map: "lessonnames_ibfk_1")
+  courses      coursenames  @relation(fields: [courseID], references: [ID], onUpdate: Restrict, map: "lessonnames_ibfk_2")
   lessons      lessons?
 
   @@index([chapterID], map: "chapterID")
@@ -67,16 +65,22 @@ model lessonnames {
 }
 
 model chapternames {
-  ID          Int        @id @default(autoincrement())
-  chapterName String     @db.VarChar(100)
+  ID          Int           @id @default(autoincrement())
+  chapterName String        @db.VarChar(100)
   courseID    Int
-  Route       String     @db.VarChar(50)
+  Route       String        @db.VarChar(50)
+  coursenames coursenames   @relation(fields: [courseID], references: [ID], onUpdate: Restrict, map: "chapternames_ibfk_1")
   chapters    chapters[]
+  lessonnames lessonnames[]
+
+  @@index([courseID], map: "courseID")
 }
 
 model coursenames {
-  ID         Int       @id @default(autoincrement())
-  courseName String    @db.VarChar(100)
-  Route      String    @db.VarChar(50)
-  courses    courses[]
+  ID           Int            @id @default(autoincrement())
+  courseName   String         @db.VarChar(100)
+  Route        String         @db.VarChar(50)
+  chapternames chapternames[]
+  courses      courses[]
+  lessonnames  lessonnames[]
 }

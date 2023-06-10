@@ -19,8 +19,8 @@ export default async function handler(
   //   } else {
   const value = await prisma.lessonnames.findMany({
     include: {
-      chapters: true,
-      courses: true,
+      chapternames: true,
+      coursenames: true,
     },
   });
   res.status(200).send(value);
