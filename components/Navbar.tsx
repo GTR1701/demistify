@@ -296,7 +296,10 @@ function CourseAccordion({ course, chapters, lessons }: any) {
       onClick={() => setAccordionOpen(!accordionOpen)}
     >
       <AccordionSummary>
-        <Link href={`${course.route}`}>
+        <Link
+          href={`${course.route}`}
+          style={{ color: "inherit", textDecoration: "none" }}
+        >
           <Typography variant="h5">{course.courseName}</Typography>
         </Link>
         {!accordionOpen ? (
