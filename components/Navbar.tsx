@@ -32,6 +32,7 @@ import {
   getLessonList,
 } from "../lib/apiFunctions";
 import { AccordionContext, UserContext } from "@/lib/context";
+import Link from "next/link";
 
 type Drawer = {
   courses: any[];
@@ -295,7 +296,9 @@ function CourseAccordion({ course, chapters, lessons }: any) {
       onClick={() => setAccordionOpen(!accordionOpen)}
     >
       <AccordionSummary>
-        <Typography variant="h5">{course.courseName}</Typography>
+        <Link href={`${course.route}`}>
+          <Typography variant="h5">{course.courseName}</Typography>
+        </Link>
         {!accordionOpen ? (
           <ExpandMoreIcon
             sx={{
@@ -347,7 +350,9 @@ function ChapterAccordion({ course, chapter, lessons, bgcolor }: any) {
       onClick={() => setAccordionOpen(!accordionOpen)}
     >
       <AccordionSummary>
-        <Typography variant="h6">{chapter.chapterName}</Typography>
+        <Link href={`${chapter.route}`}>
+          <Typography variant="h5">{chapter.chapterName}</Typography>
+        </Link>
         {!accordionOpen ? (
           <ExpandMoreIcon
             sx={{

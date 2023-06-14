@@ -80,7 +80,7 @@ export default function Login() {
         }
       } else {
         counter = 0;
-        router.push("/");
+        router.push("/login");
         setField1(false);
         setField1text("");
         setField2(false);
