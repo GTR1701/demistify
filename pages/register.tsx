@@ -69,6 +69,15 @@ export default function Login() {
     if (counter === 4) {
       const res = await callRegisterUser({ login, password, email });
       if (res.data.message !== "Użytkownik został utworzony") {
+        if (res.data.message === "Użytkownik o podanym loginie już istnieje") {
+          setField1(true);
+          setField1text("Użytkownik o podanym loginie już istnieje");
+        } else if (
+          res.data.message === "Użytkownik o podanym mailu już istnieje"
+        ) {
+          setField4(true);
+          setField4text("Użytkownik o podanym adresie email już istnieje");
+        }
       } else {
         counter = 0;
         router.push("/");
