@@ -291,11 +291,8 @@ function CourseAccordion({ course, chapters, lessons }: any) {
   }
 
   return (
-    <Accordion
-      sx={{ boxShadow: "none" }}
-      onClick={() => setAccordionOpen(!accordionOpen)}
-    >
-      <AccordionSummary>
+    <Accordion sx={{ boxShadow: "none" }}>
+      <AccordionSummary onClick={() => setAccordionOpen(!accordionOpen)}>
         <Link
           href={`${course.route}`}
           style={{ color: "inherit", textDecoration: "none" }}
@@ -348,11 +345,8 @@ function ChapterAccordion({ course, chapter, lessons, bgcolor }: any) {
   const router = useRouter();
 
   return (
-    <Accordion
-      sx={{ boxShadow: "none" }}
-      onClick={() => setAccordionOpen(!accordionOpen)}
-    >
-      <AccordionSummary>
+    <Accordion sx={{ boxShadow: "none" }}>
+      <AccordionSummary onClick={() => setAccordionOpen(!accordionOpen)}>
         <Link
           href={`${course.route}${chapter.route}`}
           style={{ color: "inherit", textDecoration: "none" }}

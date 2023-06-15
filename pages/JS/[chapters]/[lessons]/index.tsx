@@ -1,5 +1,9 @@
-import Navbar from "@/components/Navbar";
+import SelectBlockLesson from "@/components/SelectBlockLesson";
 
-export default function Lessons() {
-  return <></>;
+export default function Lesson() {
+  return (
+    <>
+      <SelectBlockLesson />
+    </>
+  );
 }
