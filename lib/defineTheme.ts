@@ -1,6 +1,10 @@
 import { loader } from "@monaco-editor/react";
 
-const monacoThemes = {
+interface MonacoThemes {
+  [key: string]: string;
+}
+
+const monacoThemes: MonacoThemes = {
   active4d: "Active4D",
   "all-hallows-eve": "All Hallows Eve",
   amy: "Amy",
