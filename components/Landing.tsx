@@ -8,13 +8,12 @@ import { languageOptions } from "../constants/languageOptions";
 
 import { defineTheme } from "../lib/defineTheme";
 import useKeyPress from "../hooks/useKeyPress";
-import Footer from "./Footer";
 import OutputWindow from "./OutputWindow";
 import CustomInput from "./CustomInput";
 import OutputDetails from "./OutputDetails";
 import ThemeDropdown from "./ThemeDropdown";
 import LanguagesDropdown from "./LanguagesDropdown";
-import { Box, Link, Snackbar } from "@mui/material";
+import { Box, Button, Link, Snackbar, Typography } from "@mui/material";
 
 const javascriptDefault = `/**
 * Problem: Binary Search: Search a sorted array for a target value.
@@ -57,7 +56,14 @@ const Landing = () => {
   const enterPress = useKeyPress("Enter");
   const ctrlPress = useKeyPress("Control");
 
-  const onSelectChange = (sl) => {
+  const onSelectChange = (
+    sl: React.SetStateAction<{
+      id: number;
+      name: string;
+      label: string;
+      value: string;
+    }>
+  ) => {
     console.log("selected Option...", sl);
     setLanguage(sl);
   };
@@ -69,7 +75,7 @@ const Landing = () => {
       handleCompile();
     }
   }, [ctrlPress, enterPress]);
-  const onChange = (action, data) => {
+  const onChange = (action: any, data: React.SetStateAction<string>) => {
     switch (action) {
       case "code": {
         setCode(data);
@@ -90,35 +96,37 @@ const Landing = () => {
     };
     const options = {
       method: "POST",
-      url: process.env.REACT_APP_RAPID_API_URL,
+      url: process.env.NEXT_PUBLIC_RAPID_API_URL,
       params: { base64_encoded: "true", fields: "*" },
       headers: {
         "content-type": "application/json",
         "Content-Type": "application/json",
-        "X-RapidAPI-Host": process.env.REACT_APP_RAPID_API_HOST,
-        "X-RapidAPI-Key": process.env.REACT_APP_RAPID_API_KEY,
+        "X-RapidAPI-Host": process.env.NEXT_PUBLIC_RAPID_API_HOST,
+        "X-RapidAPI-Key": process.env.NEXT_PUBLIC_RAPID_API_KEY,
       },
       data: formData,
     };
 
+    console.log("options: ", options);
+    console.log("kod", btoa(code));
+
     axios
       .request(options)
-      .then(function (response) {
+      .then(function (response: { data: { token: any } }) {
         console.log("res.data", response.data);
         const token = response.data.token;
         checkStatus(token);
       })
-      .catch((err) => {
+      .catch((err: { response: { data: any; status: any } }) => {
         let error = err.response ? err.response.data : err;
         // get error status
-        let status = err.response.status;
+        let status = err.response ? err.response.status : 500;
         console.log("status", status);
         if (status === 429) {
           console.log("too many requests", status);
 
           showErrorToast(
-            `Quota of 100 requests exceeded for the Day! Please read the blog on freeCodeCamp to learn how to setup your own RAPID API Judge0!`,
-            10000
+            `Quota of 100 requests exceeded for the Day! Please read the blog on freeCodeCamp to learn how to setup your own RAPID API Judge0!`
           );
         }
         setProcessing(false);
@@ -126,14 +134,14 @@ const Landing = () => {
       });
   };
 
-  const checkStatus = async (token) => {
+  const checkStatus = async (token: any) => {
     const options = {
       method: "GET",
-      url: process.env.REACT_APP_RAPID_API_URL + "/" + token,
+      url: process.env.NEXT_PUBLIC_RAPID_API_URL + "/" + token,
       params: { base64_encoded: "true", fields: "*" },
       headers: {
-        "X-RapidAPI-Host": process.env.REACT_APP_RAPID_API_HOST,
-        "X-RapidAPI-Key": process.env.REACT_APP_RAPID_API_KEY,
+        "X-RapidAPI-Host": process.env.NEXT_PUBLIC_RAPID_API_HOST,
+        "X-RapidAPI-Key": process.env.NEXT_PUBLIC_RAPID_API_KEY,
       },
     };
     try {
@@ -161,7 +169,7 @@ const Landing = () => {
     }
   };
 
-  function handleThemeChange(th) {
+  function handleThemeChange(th: any) {
     const theme = th;
     console.log("theme...", theme);
 
@@ -216,7 +224,7 @@ const Landing = () => {
       />
     );
   };
-  const showErrorToast = (msg: string) => {
+  const showErrorToast = (msg: any) => {
     // toast.error(msg || `Something went wrong! Please try again.`, {
     //   position: "top-right",
     //   autoClose: timer ? timer : 1000,
@@ -253,16 +261,11 @@ const Landing = () => {
         pauseOnHover
       /> */}
 
-      <Box sx={{ display: "flex" }}>
-        <Box sx={{ width: "fit-content" }}>
-          <LanguagesDropdown onSelectChange={onSelectChange} />
-        </Box>
-        <Box className="px-4 py-2">
-          <ThemeDropdown handleThemeChange={handleThemeChange} theme={theme} />
-        </Box>
-      </Box>
-      <Box className="flex flex-row space-x-4 items-start px-4 py-4">
-        <Box className="flex flex-col w-full h-full justify-start items-end">
+      <Box sx={{ display: "flex", gap: "1rem" }}>
+        <Box
+          sx={{ width: "85%" }}
+          className="flex flex-col w-full h-full justify-start items-end"
+        >
           <CodeEditorWindow
             code={code}
             onChange={onChange}
@@ -270,15 +273,25 @@ const Landing = () => {
             theme={theme.value}
           />
         </Box>
-
-        <Box className="right-container flex flex-shrink-0 w-[30%] flex-col">
-          <OutputWindow outputDetails={outputDetails} />
-          <Box className="flex flex-col items-end">
-            <CustomInput
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            marginTop: "1rem",
+            width: "15%",
+          }}
+        >
+          <Box
+            sx={{ display: "flex", flexDirection: "column" }}
+            className="flex flex-col items-end"
+          >
+            {/* <CustomInput
               customInput={customInput}
               setCustomInput={setCustomInput}
-            />
-            <button
+            /> */}
+            <Button
+              sx={{ width: "fit-content", margin: "1rem auto" }}
+              variant="contained"
               onClick={handleCompile}
               disabled={!code}
               className={classnames(
@@ -287,11 +300,32 @@ const Landing = () => {
               )}
             >
               {processing ? "Processing..." : "Compile and Execute"}
-            </button>
+            </Button>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              width: "fit-content",
+              marginLeft: "auto",
+              marginRight: "auto",
+              marginTop: "1rem",
+            }}
+          >
+            <Box sx={{ marginBottom: "1rem" }}>
+              <LanguagesDropdown onSelectChange={onSelectChange} />
+            </Box>
+            <Box className="px-4 py-2">
+              <ThemeDropdown
+                handleThemeChange={handleThemeChange}
+                theme={theme}
+              />
+            </Box>
           </Box>
           {outputDetails && <OutputDetails outputDetails={outputDetails} />}
         </Box>
       </Box>
+      <OutputWindow outputDetails={outputDetails} />
     </>
   );
 };

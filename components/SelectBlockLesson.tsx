@@ -5,7 +5,7 @@ export function getServerSideProps() {}
 
 export default function SelectBlockLesson() {
   return (
-    <Box sx={{ display: "flex", width: "100%", height: "93vh" }}>
+    <Box sx={{ display: "flex", width: "100%", height: "100vh" }}>
       <Box
         sx={{
           width: "25%",

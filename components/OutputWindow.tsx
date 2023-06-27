@@ -1,6 +1,7 @@
+import { Box, Typography } from "@mui/material";
 import React from "react";
 
-const OutputWindow = ({ outputDetails }) => {
+const OutputWindow = ({ outputDetails }: any) => {
   const getOutput = () => {
     let statusId = outputDetails?.status?.id;
 
@@ -35,12 +36,16 @@ const OutputWindow = ({ outputDetails }) => {
   };
   return (
     <>
-      <h1 className="font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700 mb-2">
+      <Typography
+        sx={{ height: "fit-content" }}
+        variant="h4"
+        className="font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700 mb-2"
+      >
         Output
-      </h1>
-      <div className="w-full h-56 bg-[#1e293b] rounded-md text-white font-normal text-sm overflow-y-auto">
+      </Typography>
+      <Box sx={{ backgroundColor: "black", height: "10%" }}>
         {outputDetails ? <>{getOutput()}</> : null}
-      </div>
+      </Box>
     </>
   );
 };
