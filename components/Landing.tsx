@@ -110,13 +110,9 @@ const Landing = () => {
       data: formData,
     };
 
-    console.log("options: ", options);
-    console.log("kod", btoa(code));
-
     axios
       .request(options)
       .then(function (response: { data: { token: any } }) {
-        console.log("res.data", response.data);
         const token = response.data.token;
         checkStatus(token);
       })
@@ -162,7 +158,6 @@ const Landing = () => {
         setProcessing(false);
         setOutputDetails(response.data);
         showSuccessToast(`Compiled Successfully!`);
-        console.log("response.data", response.data);
         return;
       }
     } catch (err) {
