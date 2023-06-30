@@ -1,19 +1,14 @@
-import React, { useEffect, useState } from "react";
-import CodeEditorWindow from "./CodeEditorWindow";
 import axios from "axios";
-import { classnames } from "../utils/general";
+import React, { useEffect, useState } from "react";
 import { languageOptions } from "../constants/languageOptions";
-// import { ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
-
-import { defineTheme } from "../lib/defineTheme";
+import CodeEditorWindow from "./CodeEditorWindow";
+import { Alert, Box, Button, Snackbar } from "@mui/material";
 import useKeyPress from "../hooks/useKeyPress";
-import OutputWindow from "./OutputWindow";
-import CustomInput from "./CustomInput";
-import OutputDetails from "./OutputDetails";
-import ThemeDropdown from "./ThemeDropdown";
+import { defineTheme } from "../lib/defineTheme";
 import LanguagesDropdown from "./LanguagesDropdown";
-import { Box, Button, Link, Snackbar, Typography } from "@mui/material";
+import OutputDetails from "./OutputDetails";
+import OutputWindow from "./OutputWindow";
+import ThemeDropdown from "./ThemeDropdown";
 
 const javascriptDefault = `/**
 * Problem: Binary Search: Search a sorted array for a target value.
@@ -47,7 +42,6 @@ console.log(binarySearch(arr, target));
 
 const Landing = () => {
   const [code, setCode] = useState(javascriptDefault);
-  const [customInput, setCustomInput] = useState("");
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [theme, setTheme] = useState({
@@ -55,6 +49,9 @@ const Landing = () => {
     label: "Oceanic Next",
   });
   const [language, setLanguage] = useState(languageOptions[0]);
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [msg, setMsg] = useState("");
 
   const enterPress = useKeyPress("Enter");
   const ctrlPress = useKeyPress("Control");
@@ -95,7 +92,7 @@ const Landing = () => {
       language_id: language.id,
       // encode source code in base64
       source_code: btoa(code),
-      stdin: btoa(customInput),
+      stdin: btoa(""),
     };
     const options = {
       method: "POST",
@@ -183,12 +180,6 @@ const Landing = () => {
     );
   }, []);
 
-  const [open, setOpen] = React.useState(false);
-
-  const handleClick = () => {
-    setOpen(true);
-  };
-
   const handleClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
@@ -197,73 +188,23 @@ const Landing = () => {
       return;
     }
 
-    setOpen(false);
+    setSuccessOpen(false);
+    setErrorOpen(false);
   };
 
-  const showSuccessToast = (msg: string) => {
-    // toast.success(msg || `Compiled Successfully!`, {
-    //   position: "top-right",
-    //   autoClose: 1000,
-    //   hideProgressBar: false,
-    //   closeOnClick: true,
-    //   pauseOnHover: true,
-    //   draggable: true,
-    //   progress: undefined,
-    // });
-    handleClick();
-    return (
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        autoHideDuration={1000}
-        message={msg || `Compiled Successfully!`}
-        key={"top" + "right"}
-        open={open}
-        onClose={handleClose}
-      />
-    );
+  const showSuccessToast = (msg: string): void => {
+    setSuccessOpen(true);
+    setMsg(msg);
   };
   const showErrorToast = (msg: any) => {
-    // toast.error(msg || `Something went wrong! Please try again.`, {
-    //   position: "top-right",
-    //   autoClose: timer ? timer : 1000,
-    //   hideProgressBar: false,
-    //   closeOnClick: true,
-    //   pauseOnHover: true,
-    //   draggable: true,
-    //   progress: undefined,
-    // });
-    handleClick();
-    return (
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        autoHideDuration={1000}
-        message={msg || `Compiled Successfully!`}
-        key={"top" + "right"}
-        open={open}
-        onClose={handleClose}
-      />
-    );
+    setErrorOpen(true);
+    setMsg(msg);
   };
 
   return (
     <>
-      {/* <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      /> */}
-
       <Box sx={{ display: "flex", gap: "1rem" }}>
-        <Box
-          sx={{ width: "85%" }}
-          className="flex flex-col w-full h-full justify-start items-end"
-        >
+        <Box sx={{ width: "85%" }}>
           <CodeEditorWindow
             code={code}
             onChange={onChange}
@@ -279,23 +220,12 @@ const Landing = () => {
             width: "15%",
           }}
         >
-          <Box
-            sx={{ display: "flex", flexDirection: "column" }}
-            className="flex flex-col items-end"
-          >
-            {/* <CustomInput
-              customInput={customInput}
-              setCustomInput={setCustomInput}
-            /> */}
+          <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Button
               sx={{ width: "fit-content", margin: "1rem auto" }}
               variant="contained"
               onClick={handleCompile}
               disabled={!code}
-              className={classnames(
-                "mt-4 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0",
-                !code ? "opacity-50" : ""
-              )}
             >
               {processing ? "Processing..." : "Compile and Execute"}
             </Button>
@@ -313,7 +243,7 @@ const Landing = () => {
             <Box sx={{ marginBottom: "1rem" }}>
               <LanguagesDropdown onSelectChange={onSelectChange} />
             </Box>
-            <Box className="px-4 py-2">
+            <Box>
               <ThemeDropdown
                 handleThemeChange={handleThemeChange}
                 theme={theme}
@@ -324,6 +254,30 @@ const Landing = () => {
         </Box>
       </Box>
       <OutputWindow outputDetails={outputDetails} />
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        autoHideDuration={2500}
+        message={msg || `Compiled Successfully!`}
+        key={"bottom" + "left"}
+        open={successOpen}
+        onClose={handleClose}
+      >
+        <Alert severity="success" sx={{ width: "100%" }}>
+          {msg}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        autoHideDuration={2500}
+        message={msg || `Compiled Successfully!`}
+        key={"bottom" + "left"}
+        open={errorOpen}
+        onClose={handleClose}
+      >
+        <Alert severity="error" sx={{ width: "100%" }}>
+          {msg}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

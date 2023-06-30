@@ -43,7 +43,15 @@ const OutputWindow = ({ outputDetails }: any) => {
       >
         Output
       </Typography>
-      <Box sx={{ backgroundColor: "black", height: "10%" }}>
+      <Box
+        sx={{
+          backgroundColor: "black",
+          height: "calc(100vh - 4rem - 70vh - 2.5rem)",
+          overflowY: "scroll",
+          width: "100%",
+          padding: "0 0.5rem",
+        }}
+      >
         {outputDetails ? <>{getOutput()}</> : null}
       </Box>
     </>
