@@ -9,6 +9,7 @@ import LanguagesDropdown from "./LanguagesDropdown";
 import OutputDetails from "./OutputDetails";
 import OutputWindow from "./OutputWindow";
 import ThemeDropdown from "./ThemeDropdown";
+import { LandingProps } from "@/types/lessons";
 
 const javascriptDefault = `/**
 * Problem: Binary Search: Search a sorted array for a target value.
@@ -40,8 +41,8 @@ const target = 5;
 console.log(binarySearch(arr, target));
 `;
 
-const Landing = () => {
-  const [code, setCode] = useState(javascriptDefault);
+const Landing = ({ codeLessonDefault }: LandingProps) => {
+  const [code, setCode] = useState(codeLessonDefault);
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [theme, setTheme] = useState({

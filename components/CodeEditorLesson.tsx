@@ -1,9 +1,12 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import Landing from "./Landing";
+import { CodeEditorProps } from "@/types/lessons";
+import MuiMarkdown from "mui-markdown";
 
-export function getServerSideProps() {}
-
-export default function SelectBlockLesson() {
+export default function CodeEditorLesson({
+  lessonMD,
+  codeLessonDefault,
+}: CodeEditorProps) {
   return (
     <Box sx={{ display: "flex", width: "100%", height: "calc(100vh - 4rem)" }}>
       <Box
@@ -16,7 +19,7 @@ export default function SelectBlockLesson() {
           padding: "1rem",
         }}
       >
-        <Typography>Box 1</Typography>
+        <MuiMarkdown>{lessonMD}</MuiMarkdown>
       </Box>
       <Box
         sx={{
@@ -25,7 +28,7 @@ export default function SelectBlockLesson() {
           overflow: "hidden",
         }}
       >
-        <Landing />
+        <Landing codeLessonDefault={codeLessonDefault} />
       </Box>
     </Box>
   );
