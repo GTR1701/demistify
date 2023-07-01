@@ -3,9 +3,8 @@ import { CodeEditorProps } from "@/types/lessons";
 import { useRouter } from "next/router";
 
 export function getServerSideProps() {
-  const router = useRouter();
-  const { chapter, lesson } = router.query;
-  console.log(chapter, lesson);
+  const pathname = window.location.pathname;
+  console.log("pathname...", pathname);
   return {
     props: {
       lessonMD: `#lessonMD`,
