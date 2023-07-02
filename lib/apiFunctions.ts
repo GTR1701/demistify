@@ -9,7 +9,7 @@ interface Data extends LoginData {
   email: string;
 }
 
-async function getCourseList() {
+export async function getCourseList() {
   const response = await fetch("http://demistify.pl/api/courses", {
     mode: "cors",
   });
@@ -17,7 +17,7 @@ async function getCourseList() {
   return courseList;
 }
 
-async function getChapterList() {
+export async function getChapterList() {
   const response = await fetch("http://demistify.pl/api/chapters", {
     mode: "cors",
   });
@@ -25,7 +25,7 @@ async function getChapterList() {
   return chapterList;
 }
 
-async function getLessonList() {
+export async function getLessonList() {
   const response = await fetch("http://demistify.pl/api/lessons", {
     mode: "cors",
   });
@@ -33,7 +33,7 @@ async function getLessonList() {
   return lessonList;
 }
 
-async function callRegisterUser({ login, password, email }: Data) {
+export async function callRegisterUser({ login, password, email }: Data) {
   const res = await axios.post("http://demistify.pl/api/auth/register", {
     login,
     password,
@@ -42,7 +42,7 @@ async function callRegisterUser({ login, password, email }: Data) {
   return res;
 }
 
-async function callLoginUser({ login, password }: LoginData) {
+export async function callLoginUser({ login, password }: LoginData) {
   console.log(login, password);
   const res = await axios.post("http://demistify.pl/api/auth/login", {
     login,
@@ -51,10 +51,15 @@ async function callLoginUser({ login, password }: LoginData) {
   return res;
 }
 
-export {
-  getCourseList,
-  getChapterList,
-  getLessonList,
-  callRegisterUser,
-  callLoginUser,
-};
+export async function fetchLessonData(
+  coursePath: string,
+  chapterPath: string,
+  lessonPath: string
+) {
+  const res = await axios.post("http://localhost:3000/api/lessons/data", {
+    coursePath,
+    chapterPath,
+    lessonPath,
+  });
+  return res;
+}

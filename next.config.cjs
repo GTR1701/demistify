@@ -4,3 +4,12 @@ const nextConfig = {
 }
 
 module.exports = nextConfig
+module.exports = {
+  experimental: {
+    esmExternals: true
+  }
+};
+
+const withMUI = require('./withMUI');
+
+module.exports = withMUI();

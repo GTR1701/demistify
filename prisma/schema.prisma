@@ -15,6 +15,7 @@ model chapters {
   content      String?      @db.VarChar(1000)
   courses      courses      @relation(fields: [courseID], references: [courseID], onUpdate: Restrict, map: "chapters_ibfk_1")
   chapternames chapternames @relation(fields: [chapterName], references: [ID], onUpdate: Restrict, map: "chapters_ibfk_2")
+  lessons      lessons[]
 
   @@index([courseID], map: "courseID")
   @@index([chapterName], map: "chapters_ibfk_2")
@@ -33,9 +34,13 @@ model courses {
 model lessons {
   lessonID      Int         @id @default(autoincrement())
   lessonName    Int
+  chapterID     Int
   lessonContent String      @db.Text
   route         String      @db.Text
   lessonnames   lessonnames @relation(fields: [lessonID], references: [lessonNameID], onUpdate: Restrict, map: "lessons_ibfk_2")
+  chapters      chapters    @relation(fields: [chapterID], references: [chapterID], onUpdate: Restrict, map: "lessons_ibfk_3")
+
+  @@index([chapterID], map: "chapterID")
 }
 
 model users {
