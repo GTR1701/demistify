@@ -10,7 +10,7 @@ export async function getServerSideProps(context: any) {
   const chapter = "/" + currentPath.split("/")[2];
   const lesson = "/" + currentPath.split("/")[3];
   console.log(course, chapter, lesson);
-  const content = await fetchLessonData(course, chapter, lesson);
+  // const content = await fetchLessonData(course, chapter, lesson);
 
   return {
     props: {
