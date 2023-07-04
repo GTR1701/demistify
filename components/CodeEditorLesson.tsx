@@ -2,9 +2,9 @@ import { Box } from "@mui/material";
 import Landing from "./Landing";
 import { CodeEditorProps } from "@/types/lessons";
 import dynamic from "next/dynamic";
-// const MuiMarkdown = dynamic(() => import("mui-markdown"), {
-//   ssr: false, // Disable server-side rendering for this component
-// });
+const MuiMarkdown = dynamic(() => import("mui-markdown"), {
+  ssr: false, // Disable server-side rendering for this component
+});
 
 export default function CodeEditorLesson({
   lessonMD,
@@ -22,7 +22,7 @@ export default function CodeEditorLesson({
           padding: "1rem",
         }}
       >
-        {/* <MuiMarkdown>{lessonMD}</MuiMarkdown> */}
+        <MuiMarkdown>{lessonMD}</MuiMarkdown>
       </Box>
       <Box
         sx={{
