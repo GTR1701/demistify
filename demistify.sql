@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Cze 06, 2023 at 03:47 PM
+-- Czas generowania: 04 Lip 2023, 20:11
 -- Wersja serwera: 10.4.24-MariaDB
 -- Wersja PHP: 8.1.6
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `codetastic`
+-- Baza danych: `demistify`
 --
 
 -- --------------------------------------------------------
@@ -35,7 +35,7 @@ CREATE TABLE `chapternames` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `chapternames`
+-- Zrzut danych tabeli `chapternames`
 --
 
 INSERT INTO `chapternames` (`ID`, `chapterName`, `courseID`, `Route`) VALUES
@@ -58,7 +58,7 @@ CREATE TABLE `chapters` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `chapters`
+-- Zrzut danych tabeli `chapters`
 --
 
 INSERT INTO `chapters` (`chapterID`, `chapterName`, `courseID`, `route`, `content`) VALUES
@@ -79,7 +79,7 @@ CREATE TABLE `coursenames` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `coursenames`
+-- Zrzut danych tabeli `coursenames`
 --
 
 INSERT INTO `coursenames` (`ID`, `courseName`, `Route`) VALUES
@@ -100,7 +100,7 @@ CREATE TABLE `courses` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `courses`
+-- Zrzut danych tabeli `courses`
 --
 
 INSERT INTO `courses` (`courseID`, `courseName`, `route`) VALUES
@@ -123,7 +123,7 @@ CREATE TABLE `lessonnames` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `lessonnames`
+-- Zrzut danych tabeli `lessonnames`
 --
 
 INSERT INTO `lessonnames` (`lessonNameID`, `lessonName`, `chapterID`, `courseID`, `route`) VALUES
@@ -140,6 +140,7 @@ INSERT INTO `lessonnames` (`lessonNameID`, `lessonName`, `chapterID`, `courseID`
 CREATE TABLE `lessons` (
   `lessonID` int(11) NOT NULL,
   `lessonName` int(11) NOT NULL,
+  `chapterID` int(11) NOT NULL,
   `lessonContent` text NOT NULL,
   `route` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -163,7 +164,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `users`
+-- Zrzut danych tabeli `users`
 --
 
 INSERT INTO `users` (`ID`, `uid`, `username`, `password`, `email`, `hasJS`, `hasReact`, `hasPython`, `hasNode`) VALUES
@@ -180,7 +181,8 @@ INSERT INTO `users` (`ID`, `uid`, `username`, `password`, `email`, `hasJS`, `has
 -- Indeksy dla tabeli `chapternames`
 --
 ALTER TABLE `chapternames`
-  ADD PRIMARY KEY (`ID`);
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `courseID` (`courseID`);
 
 --
 -- Indeksy dla tabeli `chapters`
@@ -215,7 +217,8 @@ ALTER TABLE `lessonnames`
 -- Indeksy dla tabeli `lessons`
 --
 ALTER TABLE `lessons`
-  ADD PRIMARY KEY (`lessonID`);
+  ADD PRIMARY KEY (`lessonID`),
+  ADD KEY `chapterID` (`chapterID`);
 
 --
 -- Indeksy dla tabeli `users`
@@ -224,80 +227,87 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`ID`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT dla zrzuconych tabel
 --
 
 --
--- AUTO_INCREMENT for table `chapternames`
+-- AUTO_INCREMENT dla tabeli `chapternames`
 --
 ALTER TABLE `chapternames`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `chapters`
+-- AUTO_INCREMENT dla tabeli `chapters`
 --
 ALTER TABLE `chapters`
   MODIFY `chapterID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `coursenames`
+-- AUTO_INCREMENT dla tabeli `coursenames`
 --
 ALTER TABLE `coursenames`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `courses`
+-- AUTO_INCREMENT dla tabeli `courses`
 --
 ALTER TABLE `courses`
   MODIFY `courseID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT for table `lessonnames`
+-- AUTO_INCREMENT dla tabeli `lessonnames`
 --
 ALTER TABLE `lessonnames`
   MODIFY `lessonNameID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `lessons`
+-- AUTO_INCREMENT dla tabeli `lessons`
 --
 ALTER TABLE `lessons`
   MODIFY `lessonID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT dla tabeli `users`
 --
 ALTER TABLE `users`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- Constraints for dumped tables
+-- Ograniczenia dla zrzutów tabel
 --
 
 --
--- Constraints for table `chapters`
+-- Ograniczenia dla tabeli `chapternames`
+--
+ALTER TABLE `chapternames`
+  ADD CONSTRAINT `chapternames_ibfk_1` FOREIGN KEY (`courseID`) REFERENCES `coursenames` (`ID`);
+
+--
+-- Ograniczenia dla tabeli `chapters`
 --
 ALTER TABLE `chapters`
   ADD CONSTRAINT `chapters_ibfk_1` FOREIGN KEY (`courseID`) REFERENCES `courses` (`courseID`),
   ADD CONSTRAINT `chapters_ibfk_2` FOREIGN KEY (`chapterName`) REFERENCES `chapternames` (`ID`);
 
 --
--- Constraints for table `courses`
+-- Ograniczenia dla tabeli `courses`
 --
 ALTER TABLE `courses`
   ADD CONSTRAINT `courses_ibfk_1` FOREIGN KEY (`courseName`) REFERENCES `coursenames` (`ID`);
 
 --
--- Constraints for table `lessonnames`
+-- Ograniczenia dla tabeli `lessonnames`
 --
 ALTER TABLE `lessonnames`
-  ADD CONSTRAINT `lessonnames_ibfk_1` FOREIGN KEY (`chapterID`) REFERENCES `chapters` (`chapterID`),
-  ADD CONSTRAINT `lessonnames_ibfk_2` FOREIGN KEY (`courseID`) REFERENCES `courses` (`courseID`);
+  ADD CONSTRAINT `lessonnames_ibfk_1` FOREIGN KEY (`chapterID`) REFERENCES `chapternames` (`ID`),
+  ADD CONSTRAINT `lessonnames_ibfk_2` FOREIGN KEY (`courseID`) REFERENCES `coursenames` (`ID`);
 
 --
--- Constraints for table `lessons`
+-- Ograniczenia dla tabeli `lessons`
 --
 ALTER TABLE `lessons`
-  ADD CONSTRAINT `lessons_ibfk_2` FOREIGN KEY (`lessonID`) REFERENCES `lessonnames` (`lessonNameID`);
+  ADD CONSTRAINT `lessons_ibfk_2` FOREIGN KEY (`lessonID`) REFERENCES `lessonnames` (`lessonNameID`),
+  ADD CONSTRAINT `lessons_ibfk_3` FOREIGN KEY (`chapterID`) REFERENCES `chapters` (`chapterID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
