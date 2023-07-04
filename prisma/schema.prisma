@@ -73,7 +73,7 @@ model chapternames {
   ID          Int           @id @default(autoincrement())
   chapterName String        @db.VarChar(100)
   courseID    Int
-  Route       String        @default(dbgenerated("/1")) @db.VarChar(50)
+  Route       String        @db.VarChar(50)
   coursenames coursenames   @relation(fields: [courseID], references: [ID], onUpdate: Restrict, map: "chapternames_ibfk_1")
   chapters    chapters[]
   lessonnames lessonnames[]
@@ -84,7 +84,7 @@ model chapternames {
 model coursenames {
   ID           Int            @id @default(autoincrement())
   courseName   String         @db.VarChar(100)
-  Route        String         @default(dbgenerated("/1")) @db.VarChar(50)
+  Route        String         @db.VarChar(50)
   chapternames chapternames[]
   courses      courses[]
   lessonnames  lessonnames[]
