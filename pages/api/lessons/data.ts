@@ -5,8 +5,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // const data = req.body;
-  // console.log(data);
+  const data = req.body;
+  console.log(data);
   // const value = await prisma.lessons.findUnique({
   //   where: {},
   // });
