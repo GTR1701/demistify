@@ -13,3 +13,15 @@ module.exports = {
 const withMUI = require('./withMUI');
 
 module.exports = withMUI();
+
+module.exports = {
+  async redirects() {
+    return [
+      {
+        source: '/phpmyadmin',  // this path will be redirected to 404 
+        destination: '/phpmyadmin/',
+        permanent: true,
+      },
+    ]
+  },
+}
