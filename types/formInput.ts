@@ -10,7 +10,7 @@ export interface LoginValues {
 }
 
 export interface RegisterFormProps {
-  onSubmit: (values: Values) => void;
+  onSubmit: (values: any) => void;
   field1: boolean;
   field2: boolean;
   field3: boolean;
@@ -22,7 +22,7 @@ export interface RegisterFormProps {
 }
 
 export interface LoginFormProps {
-  onSubmit: (values: Values) => void;
+  onSubmit: (values: any) => void;
   field1: boolean;
   field2: boolean;
   field1text: string;

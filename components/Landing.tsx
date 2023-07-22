@@ -2,7 +2,14 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { languageOptions } from "../constants/languageOptions";
 import CodeEditorWindow from "./CodeEditorWindow";
-import { Alert, Box, Button, Snackbar } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Snackbar,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import useKeyPress from "../hooks/useKeyPress";
 import { defineTheme } from "../lib/defineTheme";
 import LanguagesDropdown from "./LanguagesDropdown";
@@ -56,6 +63,8 @@ const Landing = ({ codeLessonDefault }: LandingProps) => {
 
   const enterPress = useKeyPress("Enter");
   const ctrlPress = useKeyPress("Control");
+  const themeMUI = useTheme();
+  const isMobile = useMediaQuery(themeMUI.breakpoints.up("md"));
 
   const onSelectChange = (
     sl: React.SetStateAction<{
@@ -204,81 +213,163 @@ const Landing = ({ codeLessonDefault }: LandingProps) => {
 
   return (
     <>
-      <Box sx={{ display: "flex", gap: "1rem" }}>
-        <Box sx={{ width: "85%" }}>
-          <CodeEditorWindow
-            code={code}
-            onChange={onChange}
-            language={language?.value}
-            theme={theme.value}
-          />
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            marginTop: "1rem",
-            width: "15%",
-          }}
-        >
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <Button
-              sx={{ width: "fit-content", margin: "1rem auto" }}
-              variant="contained"
-              onClick={handleCompile}
-              disabled={!code}
-            >
-              {processing ? "Processing..." : "Compile and Execute"}
-            </Button>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              width: "fit-content",
-              marginLeft: "auto",
-              marginRight: "auto",
-              marginTop: "1rem",
-            }}
-          >
-            <Box sx={{ marginBottom: "1rem" }}>
-              <LanguagesDropdown onSelectChange={onSelectChange} />
-            </Box>
-            <Box>
-              <ThemeDropdown
-                handleThemeChange={handleThemeChange}
-                theme={theme}
+      {isMobile ? (
+        <>
+          <Box sx={{ display: "flex", gap: "1rem" }}>
+            <Box sx={{ width: "85%" }}>
+              <CodeEditorWindow
+                code={code}
+                onChange={onChange}
+                language={language?.value}
+                theme={theme.value}
               />
             </Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                marginTop: "1rem",
+                width: "15%",
+              }}
+            >
+              <Box sx={{ display: "flex", flexDirection: "column" }}>
+                <Button
+                  sx={{ width: "fit-content", margin: "1rem auto" }}
+                  variant="contained"
+                  onClick={handleCompile}
+                  disabled={!code}
+                >
+                  {processing ? "Processing..." : "Compile and Execute"}
+                </Button>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "fit-content",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  marginTop: "1rem",
+                }}
+              >
+                <Box sx={{ marginBottom: "1rem" }}>
+                  <LanguagesDropdown onSelectChange={onSelectChange} />
+                </Box>
+                <Box>
+                  <ThemeDropdown
+                    handleThemeChange={handleThemeChange}
+                    theme={theme}
+                  />
+                </Box>
+              </Box>
+              {outputDetails && <OutputDetails outputDetails={outputDetails} />}
+            </Box>
           </Box>
-          {outputDetails && <OutputDetails outputDetails={outputDetails} />}
-        </Box>
-      </Box>
-      <OutputWindow outputDetails={outputDetails} />
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        autoHideDuration={2500}
-        message={msg || `Compiled Successfully!`}
-        key={"bottom" + "left"}
-        open={successOpen}
-        onClose={handleClose}
-      >
-        <Alert severity="success" sx={{ width: "100%" }}>
-          {msg}
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        autoHideDuration={2500}
-        message={msg || `Compiled Successfully!`}
-        key={"bottom" + "left"}
-        open={errorOpen}
-        onClose={handleClose}
-      >
-        <Alert severity="error" sx={{ width: "100%" }}>
-          {msg}
-        </Alert>
-      </Snackbar>
+          <OutputWindow outputDetails={outputDetails} />
+          <Snackbar
+            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+            autoHideDuration={2500}
+            message={msg || `Compiled Successfully!`}
+            key={"bottom" + "left"}
+            open={successOpen}
+            onClose={handleClose}
+          >
+            <Alert severity="success" sx={{ width: "100%" }}>
+              {msg}
+            </Alert>
+          </Snackbar>
+          <Snackbar
+            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+            autoHideDuration={2500}
+            message={msg || `Compiled Successfully!`}
+            key={"bottom" + "left"}
+            open={errorOpen}
+            onClose={handleClose}
+          >
+            <Alert severity="error" sx={{ width: "100%" }}>
+              {msg}
+            </Alert>
+          </Snackbar>
+        </>
+      ) : (
+        <>
+          <Box sx={{ display: "flex", gap: "1rem", flexDirection: "column" }}>
+            <Box sx={{ width: "100%" }}>
+              <CodeEditorWindow
+                code={code}
+                onChange={onChange}
+                language={language?.value}
+                theme={theme.value}
+              />
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                marginTop: "1rem",
+                width: "100%",
+              }}
+            >
+              <Box sx={{ display: "flex", flexDirection: "column" }}>
+                <Button
+                  sx={{ width: "fit-content", margin: "1rem auto" }}
+                  variant="contained"
+                  onClick={handleCompile}
+                  disabled={!code}
+                >
+                  {processing ? "Processing..." : "Compile and Execute"}
+                </Button>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "fit-content",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  marginTop: "1rem",
+                }}
+              >
+                <Box sx={{ marginBottom: "1rem" }}>
+                  <LanguagesDropdown onSelectChange={onSelectChange} />
+                </Box>
+                <Box>
+                  <ThemeDropdown
+                    handleThemeChange={handleThemeChange}
+                    theme={theme}
+                  />
+                </Box>
+              </Box>
+              {outputDetails && <OutputDetails outputDetails={outputDetails} />}
+            </Box>
+          </Box>
+          <OutputWindow outputDetails={outputDetails} />
+          <Snackbar
+            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+            autoHideDuration={2500}
+            message={msg || `Compiled Successfully!`}
+            key={"bottom" + "left"}
+            open={successOpen}
+            onClose={handleClose}
+          >
+            <Alert severity="success" sx={{ width: "100%" }}>
+              {msg}
+            </Alert>
+          </Snackbar>
+          <Snackbar
+            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+            autoHideDuration={2500}
+            message={msg || `Compiled Successfully!`}
+            key={"bottom" + "left"}
+            open={errorOpen}
+            onClose={handleClose}
+          >
+            <Alert severity="error" sx={{ width: "100%" }}>
+              {msg}
+            </Alert>
+          </Snackbar>
+        </>
+      )}
     </>
   );
 };

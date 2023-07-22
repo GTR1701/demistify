@@ -1,3 +1,4 @@
+import { LessonObject } from "@/types/lessons";
 import axios from "axios";
 
 interface LoginData {
@@ -51,15 +52,12 @@ export async function callLoginUser({ login, password }: LoginData) {
   return res;
 }
 
-export async function fetchLessonData(
-  coursePath: string,
-  chapterPath: string,
-  lessonPath: string
-) {
-  const res = await axios.post("http://localhost:3000/api/lessons/data", {
-    coursePath,
-    chapterPath,
-    lessonPath,
-  });
+export async function fetchLessonData(lessonID: string) {
+  const res: LessonObject = await axios.post(
+    "http://localhost:3000/api/lessons/data",
+    {
+      lessonID,
+    }
+  );
   return res;
 }
