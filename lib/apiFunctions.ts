@@ -54,7 +54,7 @@ export async function callLoginUser({ login, password }: LoginData) {
 
 export async function fetchLessonData(lessonID: string) {
   const res: Lessons = await axios.post(
-    "http://localhost:3000/api/lessons/data",
+    "http://demistify.pl/api/lessons/data",
     {
       lessonID,
     }

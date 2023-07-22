@@ -6,18 +6,13 @@ import { CodeEditorProps } from "@/types/lessons";
 export async function getServerSideProps(context: any) {
   const { req } = context;
   const currentPath = req.url;
-  // const depth = currentPath.split("/").length - 1;
-  // const course = "/" + currentPath.split("/")[1];
-  // const chapter = "/" + currentPath.split("/")[2];
   const lesson = currentPath.split("/")[3];
-  console.log(lesson);
   const content: Lessons = await fetchLessonData(lesson);
-  console.log(content);
 
   return {
     props: {
       lessonMD: content.lessonMD,
-      codeLessonDefault: "console.log('hello world')",
+      codeLessonDefault: content.lessonCodeDefault,
     },
   };
 }
