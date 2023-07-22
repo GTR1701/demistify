@@ -1,36 +1,35 @@
 import CodeEditorLesson from "@/components/CodeEditorLesson";
 import { fetchLessonData } from "@/lib/apiFunctions";
-import { LessonObject } from "@/types/lessons";
+import { Lessons } from "@/types/db";
+import { CodeEditorProps } from "@/types/lessons";
 
 export async function getServerSideProps(context: any) {
   const { req } = context;
   const currentPath = req.url;
-  const lessonID = currentPath.split("/")[3];
-
-  const content: LessonObject = await fetchLessonData(lessonID);
+  // const depth = currentPath.split("/").length - 1;
+  // const course = "/" + currentPath.split("/")[1];
+  // const chapter = "/" + currentPath.split("/")[2];
+  const lesson = "/" + currentPath.split("/")[3];
+  console.log(lesson);
+  const content: Lessons = await fetchLessonData(lesson);
 
   return {
     props: {
       lessonMD: content.lessonMD,
-      lessonName: content.lessonName,
-      lessonCodeDefault:
-        content.lessonCodeDefault || "console.log('hello world')",
-      lessonCodeSolution: content.lessonCodeSolution || "",
+      codeLessonDefault: "console.log('hello world')",
     },
   };
 }
 
 export default function Lesson({
   lessonMD,
-  lessonName,
-  lessonCodeDefault,
-  lessonCodeSolution,
-}: LessonObject) {
+  codeLessonDefault,
+}: CodeEditorProps) {
   return (
     <>
       <CodeEditorLesson
         lessonMD={lessonMD}
-        codeLessonDefault={lessonCodeDefault}
+        codeLessonDefault={codeLessonDefault}
       />
     </>
   );

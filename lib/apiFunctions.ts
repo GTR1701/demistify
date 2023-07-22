@@ -1,4 +1,4 @@
-import { LessonObject } from "@/types/lessons";
+import { Lessons } from "@/types/db";
 import axios from "axios";
 
 interface LoginData {
@@ -53,7 +53,7 @@ export async function callLoginUser({ login, password }: LoginData) {
 }
 
 export async function fetchLessonData(lessonID: string) {
-  const res: LessonObject = await axios.post(
+  const res: Lessons = await axios.post(
     "http://localhost:3000/api/lessons/data",
     {
       lessonID,
