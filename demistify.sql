@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 04 Lip 2023, 20:11
+-- Czas generowania: 22 Lip 2023, 21:20
 -- Wersja serwera: 10.4.24-MariaDB
 -- Wersja PHP: 8.1.6
 
@@ -141,8 +141,9 @@ CREATE TABLE `lessons` (
   `lessonID` int(11) NOT NULL,
   `lessonName` int(11) NOT NULL,
   `chapterID` int(11) NOT NULL,
-  `lessonContent` text NOT NULL,
-  `route` text NOT NULL
+  `lessonCodeDefault` text NOT NULL DEFAULT 'console.log("hello world!")',
+  `lessonCodeSolution` text NOT NULL DEFAULT 'console.log("hello world!")',
+  `lessonMD` text NOT NULL DEFAULT '##default MD'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
