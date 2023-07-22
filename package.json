@@ -45,6 +45,6 @@
     "@babel/plugin-transform-runtime": "^7.22.5",
     "@babel/preset-react": "^7.22.5",
     "@types/bcryptjs": "^2.4.2",
-    "prisma": "^4.15.0"
+    "prisma": "5.0.0"
   }
 }

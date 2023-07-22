@@ -59,5 +59,5 @@ export async function fetchLessonData(lessonID: string) {
       lessonID,
     }
   );
-  return res;
+  return res.data;
 }

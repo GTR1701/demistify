@@ -13,6 +13,7 @@ export interface Courses {
 }
 
 export interface Lessons {
+  [x: string]: any;
   lessonID: number;
   lessonName?: number;
   lessonMD: string;

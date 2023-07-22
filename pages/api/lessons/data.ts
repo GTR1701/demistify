@@ -7,16 +7,19 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const lessonID = req.body;
+  let lessonID = parseInt(req.body.lessonID);
   console.log(lessonID);
   const lessonData = await prisma.lessons.findUnique({
     where: {
-      lessonID: lessonID.lessonID,
+      lessonID: lessonID,
     },
-    include: {
-      lessonnames: true,
+  });
+  let lessonName = await prisma.lessonnames.findUnique({
+    where: {
+      lessonNameID: lessonID,
     },
   });
   console.log(lessonData);
+  // lessonData.lessonName = lessonName.lessonName;
   res.status(200).send(lessonData);
 }
