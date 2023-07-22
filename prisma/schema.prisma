@@ -35,9 +35,9 @@ model lessons {
   lessonID           Int         @id @default(autoincrement())
   lessonName         Int
   chapterID          Int
-  lessonMD           String      @default("##default MD") @db.Text
-  lessonCodeDefault  String      @default("console.log(\"hello world!\")") @db.Text
-  lessonCodeSolution String      @default("console.log(\"hello world!\")") @db.Text
+  lessonCodeDefault  String      @default("console.log(\"Hello, World!\")") @db.VarChar(4096)
+  lessonCodeSolution String      @default("console.log(\"Hello, World!\")") @db.VarChar(4096)
+  lessonMD           String      @default("console.log(\"Hello, World!\")") @db.VarChar(4096)
   lessonnames        lessonnames @relation(fields: [lessonID], references: [lessonNameID], onUpdate: Restrict, map: "lessons_ibfk_2")
   chapters           chapters    @relation(fields: [chapterID], references: [chapterID], onUpdate: Restrict, map: "lessons_ibfk_3")
 
