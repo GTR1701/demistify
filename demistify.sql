@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 22 Lip 2023, 21:20
+-- Czas generowania: 23 Lip 2023, 14:00
 -- Wersja serwera: 10.4.24-MariaDB
 -- Wersja PHP: 8.1.6
 
@@ -141,10 +141,17 @@ CREATE TABLE `lessons` (
   `lessonID` int(11) NOT NULL,
   `lessonName` int(11) NOT NULL,
   `chapterID` int(11) NOT NULL,
-  `lessonCodeDefault` text NOT NULL DEFAULT 'console.log("hello world!")',
-  `lessonCodeSolution` text NOT NULL DEFAULT 'console.log("hello world!")',
-  `lessonMD` text NOT NULL DEFAULT '##default MD'
+  `lessonCodeDefault` varchar(4096) NOT NULL DEFAULT 'console.log("Hello, World!")',
+  `lessonCodeSolution` varchar(4096) NOT NULL DEFAULT 'console.log("Hello, World!")',
+  `lessonMD` varchar(4096) NOT NULL DEFAULT 'console.log("Hello, World!")'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Zrzut danych tabeli `lessons`
+--
+
+INSERT INTO `lessons` (`lessonID`, `lessonName`, `chapterID`, `lessonCodeDefault`, `lessonCodeSolution`, `lessonMD`) VALUES
+(1, 1, 1, 'console.log(\"Hello, World!\")', 'console.log(\"Hello, World!\")', 'console.log(\"Hello, World!\")');
 
 -- --------------------------------------------------------
 
@@ -265,7 +272,7 @@ ALTER TABLE `lessonnames`
 -- AUTO_INCREMENT dla tabeli `lessons`
 --
 ALTER TABLE `lessons`
-  MODIFY `lessonID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `lessonID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT dla tabeli `users`

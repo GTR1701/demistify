@@ -20,6 +20,12 @@ export default async function handler(
     },
   });
   console.log(lessonData);
-  // lessonData.lessonName = lessonName.lessonName;
-  res.status(200).send(lessonData);
+  let response: LessonObject = {
+    lessonID: lessonData.lessonID,
+    lessonName: lessonName.lessonName,
+    lessonMD: lessonData.lessonMD,
+    lessonCodeDefault: lessonData.lessonCodeDefault,
+    lessonCodeSolution: lessonData.lessonCodeSolution,
+  };
+  res.status(200).send(response);
 }

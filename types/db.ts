@@ -15,7 +15,7 @@ export interface Courses {
 export interface Lessons {
   [x: string]: any;
   lessonID: number;
-  lessonName?: number;
+  lessonName?: number | string;
   lessonMD: string;
   lessonCodeDefault: string;
   lessonCodeSolution: string;
