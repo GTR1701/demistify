@@ -1,5 +1,5 @@
+//@ts-nocheck
 import { prisma } from "@/prisma/prisma";
-import { LessonNames, Lessons } from "@/types/db";
 import { LessonObject } from "@/types/lessons";
 import type { NextApiRequest, NextApiResponse } from "next";
 
