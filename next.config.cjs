@@ -9,7 +9,3 @@ module.exports = {
     esmExternals: true
   }
 };
-
-const withMUI = require('./withMUI');
-
-module.exports = withMUI();

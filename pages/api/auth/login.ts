@@ -30,7 +30,7 @@ export default async function handler(
     return;
   }
   const value = {
-    uid: user[0].uid,
+    uid: user[0].uuid,
     username: user[0].username,
   };
   res.status(200).json(value);

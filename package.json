@@ -1,7 +1,6 @@
 {
   "name": "codetastic",
   "version": "0.1.0",
-  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -15,7 +14,9 @@
     "@monaco-editor/react": "^4.5.1",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.11.15",
-    "@prisma/client": "^5.0.0",
+    "@prisma/client": "^5.2.0",
+    "@react-spring/web": "^9.7.3",
+    "@tanstack/react-query": "^4.33.0",
     "@types/node": "18.15.11",
     "@types/react": "18.0.32",
     "@types/react-dom": "18.0.11",
@@ -44,7 +45,8 @@
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.22.5",
     "@babel/preset-react": "^7.22.5",
+    "@tanstack/eslint-plugin-query": "^4.34.1",
     "@types/bcryptjs": "^2.4.2",
-    "prisma": "5.0.0"
+    "prisma": "^5.2.0"
   }
 }

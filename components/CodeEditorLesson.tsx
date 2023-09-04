@@ -7,8 +7,11 @@ const MuiMarkdown = dynamic(() => import("mui-markdown"), {
 });
 
 export default function CodeEditorLesson({
-  lessonMD,
-  codeLessonDefault,
+  description,
+  codeEditorDefault,
+  codeEditorSolution,
+  nextLesson,
+  previousLesson,
 }: CodeEditorProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.up("md"));
@@ -20,7 +23,7 @@ export default function CodeEditorLesson({
         >
           <Box
             sx={{
-              width: "25%",
+              width: "45%",
               height: "100%",
               overflow: "hidden",
               scrollbarWidth: "none",
@@ -28,16 +31,16 @@ export default function CodeEditorLesson({
               padding: "1rem",
             }}
           >
-            <MuiMarkdown>{lessonMD}</MuiMarkdown>
+            <MuiMarkdown>{description}</MuiMarkdown>
           </Box>
           <Box
             sx={{
-              width: "75%",
+              width: "55%",
               height: "100%",
               overflow: "hidden",
             }}
           >
-            <Landing codeLessonDefault={codeLessonDefault} />
+            <Landing codeEditorDefault={codeEditorDefault} codeEditorSolution={codeEditorSolution} nextLesson={nextLesson} previousLesson={previousLesson} />
           </Box>
         </Box>
       ) : (
@@ -58,14 +61,14 @@ export default function CodeEditorLesson({
               padding: "1rem",
             }}
           >
-            <MuiMarkdown>{lessonMD}</MuiMarkdown>
+            <MuiMarkdown>{description}</MuiMarkdown>
           </Box>
           <Box
             sx={{
               width: "100%",
             }}
           >
-            <Landing codeLessonDefault={codeLessonDefault} />
+            <Landing codeEditorDefault={codeEditorDefault} codeEditorSolution={codeEditorSolution} nextLesson={nextLesson} previousLesson={previousLesson} />
           </Box>
         </Box>
       )}

@@ -11,6 +11,7 @@ import {
   AppBar,
   Box,
   Button,
+  CircularProgress,
   Drawer,
   FormControlLabel,
   IconButton,
@@ -30,27 +31,28 @@ import {
   getChapterList,
   getCourseList,
   getLessonList,
+  getSidebar,
 } from "../lib/apiFunctions";
 import { AccordionContext, UserContext } from "@/lib/context";
 import Link from "next/link";
+import { animated, useSpring } from "@react-spring/web";
+import { useQuery } from "@tanstack/react-query";
+import {
+  ICustomDrawer,
+  ICustomDrawerChapters,
+  ICustomDrawerCourses,
+} from "@/types/navbar";
+import { IChapters, ICourses, ILessons, ISidebar } from "@/types/db";
 
-type Drawer = {
-  courses: any[];
-  chapters: any[];
-  lessons: any[];
-};
+export default function Navbar() {
+  const { isLoading, isError, data, error } = useQuery({
+    queryKey: ["posts"],
+    queryFn: getSidebar,
+  });
 
-type HomeProps = {
-  toggleTheme?: React.MouseEventHandler<HTMLButtonElement>;
-};
-
-export default function Navbar(props: HomeProps) {
   const { accordionState, setAccordionState } = useContext(AccordionContext);
 
   const [open, setOpen] = useState(false);
-  const [courses, setCourses] = useState([]);
-  const [chapters, setChapters] = useState([]);
-  const [lessons, setLessons] = useState([]);
   const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.up("md"));
@@ -61,16 +63,16 @@ export default function Navbar(props: HomeProps) {
     setOpen(!open);
   }
 
-  useEffect(() => {
-    (async () => {
-      setCourses(await getCourseList());
-      setChapters(await getChapterList());
-      setLessons(await getLessonList());
-    })();
-  }, [uid, username]);
-
-  const [darkMode, setDarkMode] = useState(true);
-
+  const darkThemeIconStyle = useSpring({
+    opacity: theme.palette.mode === "dark" ? 1 : 0,
+    y: theme.palette.mode === "dark" ? 0 : 0.5,
+    rotate: theme.palette.mode === "dark" ? 0 : -45,
+  });
+  const lightThemeIconStyle = useSpring({
+    opacity: theme.palette.mode !== "dark" ? 1 : 0,
+    y: theme.palette.mode !== "dark" ? 0 : 0.5,
+    rotate: theme.palette.mode === "dark" ? -45 : 0,
+  });
   const label = { inputProps: { "aria-label": "Dark mode" } };
 
   return (
@@ -119,11 +121,26 @@ export default function Navbar(props: HomeProps) {
                       />
                     }
                     label={
-                      theme.palette.mode === "dark" ? (
-                        <DarkModeIcon sx={{ paddingTop: "6px" }} />
-                      ) : (
-                        <LightModeIcon sx={{ paddingTop: "6px" }} />
-                      )
+                      <>
+                        <animated.div style={darkThemeIconStyle}>
+                          <DarkModeIcon
+                            sx={{
+                              paddingTop: "6px",
+                              translate: "0 0.9rem",
+                              scale: "1.1",
+                            }}
+                          />
+                        </animated.div>
+                        <animated.div style={lightThemeIconStyle}>
+                          <LightModeIcon
+                            sx={{
+                              paddingTop: "6px",
+                              translate: "0 -0.9rem",
+                              scale: "1.1",
+                            }}
+                          />
+                        </animated.div>
+                      </>
                     }
                     labelPlacement="start"
                   />
@@ -187,7 +204,7 @@ export default function Navbar(props: HomeProps) {
                             onChange={() => {
                               myTheme.toggleColorMode();
                             }}
-                            color={darkMode ? "default" : "secondary"}
+                            color="default"
                           />
                         }
                         label={
@@ -248,13 +265,25 @@ export default function Navbar(props: HomeProps) {
         </Toolbar>
       </AppBar>
       <Drawer anchor="left" open={open} onClose={handleDrawer}>
-        <CustomDrawer courses={courses} chapters={chapters} lessons={lessons} />
+        {isLoading ? (
+          <CircularProgress />
+        ) : (
+          <CustomDrawer
+            courses={data?.data.courses}
+            chapters={data?.data.chapters}
+            lessons={data?.data.lessons}
+          />
+        )}
       </Drawer>
     </div>
   );
 }
 
-function CustomDrawer({ courses, chapters, lessons }: Drawer) {
+function CustomDrawer({
+  courses,
+  chapters,
+  lessons,
+}: ICustomDrawer<ISidebar[], ISidebar[], ISidebar[]>) {
   return (
     <List
       sx={{
@@ -264,12 +293,13 @@ function CustomDrawer({ courses, chapters, lessons }: Drawer) {
         color: "inherit",
       }}
     >
-      {courses.map((course: any) => (
+      {courses.map((course: ISidebar, index: number) => (
         <CourseAccordion
+          index={index}
           course={course}
           chapters={chapters}
           lessons={lessons}
-          key={course.courseID}
+          key={course.id}
         />
       ))}
     </List>
@@ -279,12 +309,17 @@ function CustomDrawer({ courses, chapters, lessons }: Drawer) {
   );
 }
 
-function CourseAccordion({ course, chapters, lessons }: any) {
+function CourseAccordion({
+  index,
+  course,
+  chapters,
+  lessons,
+}: ICustomDrawerCourses<ISidebar, ISidebar[], ISidebar[]>) {
   const [accordionOpen, setAccordionOpen] = useState(false);
   const theme = useTheme();
 
   let bgColor: string;
-  if (course.courseID % 2 == 1) {
+  if (index % 2 == 1) {
     bgColor = theme.palette.primary.light;
   } else {
     bgColor = "ffffff";
@@ -294,10 +329,10 @@ function CourseAccordion({ course, chapters, lessons }: any) {
     <Accordion sx={{ boxShadow: "none" }}>
       <AccordionSummary onClick={() => setAccordionOpen(!accordionOpen)}>
         <Link
-          href={`/${course.Route}`}
+          href={`/${course.route}`}
           style={{ color: "inherit", textDecoration: "none" }}
         >
-          <Typography variant="h5">{course.courseName}</Typography>
+          <Typography variant="h5">{course.name}</Typography>
         </Link>
         {!accordionOpen ? (
           <ExpandMoreIcon
@@ -320,14 +355,15 @@ function CourseAccordion({ course, chapters, lessons }: any) {
       </AccordionSummary>
       <AccordionDetails>
         <List>
-          {chapters.map((chapter: any) => {
-            if (chapter.courseID == course.ID) {
+          {chapters.map((chapter: any, index: number) => {
+            if (chapter.childOf === course.name) {
               return (
                 <ChapterAccordion
+                  index={index}
                   course={course}
                   chapter={chapter}
                   lessons={lessons}
-                  bgcolor={bgColor}
+                  bgColor={bgColor}
                   key={chapter.ID}
                 />
               );
@@ -339,7 +375,13 @@ function CourseAccordion({ course, chapters, lessons }: any) {
   );
 }
 
-function ChapterAccordion({ course, chapter, lessons, bgcolor }: any) {
+function ChapterAccordion({
+  index,
+  course,
+  chapter,
+  lessons,
+  bgColor,
+}: ICustomDrawerChapters<ISidebar, ISidebar, ISidebar[]>) {
   const [accordionOpen, setAccordionOpen] = useState(false);
 
   const router = useRouter();
@@ -348,10 +390,10 @@ function ChapterAccordion({ course, chapter, lessons, bgcolor }: any) {
     <Accordion sx={{ boxShadow: "none" }}>
       <AccordionSummary onClick={() => setAccordionOpen(!accordionOpen)}>
         <Link
-          href={`/${course.Route}/${chapter.ID}`}
+          href={`/${course.route}/${chapter.route}`}
           style={{ color: "inherit", textDecoration: "none" }}
         >
-          <Typography variant="h5">{chapter.chapterName}</Typography>
+          <Typography variant="h5">{chapter.name}</Typography>
         </Link>
         {!accordionOpen ? (
           <ExpandMoreIcon
@@ -376,19 +418,19 @@ function ChapterAccordion({ course, chapter, lessons, bgcolor }: any) {
         <List>
           {lessons.map((lesson: any) => {
             if (
-              lesson.courseID === course.ID &&
-              lesson.chapterID === chapter.ID
+              chapter.childOf === course.name &&
+              lesson.childOf === chapter.name
             ) {
               return (
                 <ListItemButton
-                  key={lesson.lessonNameID}
+                  key={lesson.id}
                   onClick={() =>
                     router.push(
-                      `/${course.Route}/${chapter.ID}/${lesson.lessonNameID}`
+                      `/${course.route}/${chapter.route}/${lesson.route}`
                     )
                   }
                 >
-                  <Typography>{lesson.lessonName}</Typography>
+                  <Typography>{lesson.name}</Typography>
                 </ListItemButton>
               );
             }

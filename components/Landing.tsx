@@ -6,7 +6,9 @@ import {
   Alert,
   Box,
   Button,
+  Modal,
   Snackbar,
+  Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -17,39 +19,11 @@ import OutputDetails from "./OutputDetails";
 import OutputWindow from "./OutputWindow";
 import ThemeDropdown from "./ThemeDropdown";
 import { LandingProps } from "@/types/lessons";
+import {useRouter} from "next/router";
+import Link from "next/link";
 
-const javascriptDefault = `/**
-* Problem: Binary Search: Search a sorted array for a target value.
-*/
-
-// Time: O(log n)
-const binarySearch = (arr, target) => {
- return binarySearchHelper(arr, target, 0, arr.length - 1);
-};
-
-const binarySearchHelper = (arr, target, start, end) => {
- if (start > end) {
-   return false;
- }
- let mid = Math.floor((start + end) / 2);
- if (arr[mid] === target) {
-   return mid;
- }
- if (arr[mid] < target) {
-   return binarySearchHelper(arr, target, mid + 1, end);
- }
- if (arr[mid] > target) {
-   return binarySearchHelper(arr, target, start, mid - 1);
- }
-};
-
-const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-const target = 5;
-console.log(binarySearch(arr, target));
-`;
-
-const Landing = ({ codeLessonDefault }: LandingProps) => {
-  const [code, setCode] = useState(codeLessonDefault);
+const Landing = ({ codeEditorDefault, codeEditorSolution, nextLesson, previousLesson }: LandingProps) => {
+  const [code, setCode] = useState(codeEditorDefault);
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [theme, setTheme] = useState({
@@ -60,11 +34,13 @@ const Landing = ({ codeLessonDefault }: LandingProps) => {
   const [successOpen, setSuccessOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
   const [msg, setMsg] = useState("");
+  const [modalOpen, setModalOpen] = useState(false)
 
   const enterPress = useKeyPress("Enter");
   const ctrlPress = useKeyPress("Control");
   const themeMUI = useTheme();
   const isMobile = useMediaQuery(themeMUI.breakpoints.up("md"));
+  const router = useRouter();
 
   const onSelectChange = (
     sl: React.SetStateAction<{
@@ -165,6 +141,12 @@ const Landing = ({ codeLessonDefault }: LandingProps) => {
         setProcessing(false);
         setOutputDetails(response.data);
         showSuccessToast(`Compiled Successfully!`);
+        
+        if(atob(response.data.stdout).toString().trim() == codeEditorSolution.toString().trim()){
+          handleModalOpen()
+          console.log("modalOpen",modalOpen)
+        }
+
         return;
       }
     } catch (err) {
@@ -202,6 +184,9 @@ const Landing = ({ codeLessonDefault }: LandingProps) => {
     setErrorOpen(false);
   };
 
+  const handleModalOpen = () => {setModalOpen(true); console.log("modalOpen",modalOpen)};
+  const handleModalClose = () => {setModalOpen(false); console.log("modalOpen",modalOpen)};
+
   const showSuccessToast = (msg: string): void => {
     setSuccessOpen(true);
     setMsg(msg);
@@ -216,7 +201,7 @@ const Landing = ({ codeLessonDefault }: LandingProps) => {
       {isMobile ? (
         <>
           <Box sx={{ display: "flex", gap: "1rem" }}>
-            <Box sx={{ width: "85%" }}>
+            <Box sx={{ width: "75%" }}>
               <CodeEditorWindow
                 code={code}
                 onChange={onChange}
@@ -229,10 +214,12 @@ const Landing = ({ codeLessonDefault }: LandingProps) => {
                 display: "flex",
                 flexDirection: "column",
                 marginTop: "1rem",
-                width: "15%",
+                width: "15%", 
+                marginLeft: "auto", 
+                marginRight: "auto" 
               }}
             >
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <Box sx={{ display: "flex", flexDirection: "column", }}>
                 <Button
                   sx={{ width: "fit-content", margin: "1rem auto" }}
                   variant="contained"
@@ -246,9 +233,7 @@ const Landing = ({ codeLessonDefault }: LandingProps) => {
                 sx={{
                   display: "flex",
                   flexDirection: "column",
-                  width: "fit-content",
-                  marginLeft: "auto",
-                  marginRight: "auto",
+                  width: "100%",
                   marginTop: "1rem",
                 }}
               >
@@ -290,6 +275,55 @@ const Landing = ({ codeLessonDefault }: LandingProps) => {
               {msg}
             </Alert>
           </Snackbar>
+          <Modal
+            open={modalOpen}
+            onClose={handleModalClose}
+            sx={{ 
+              display: "flex", 
+              alignItems: "center", 
+              justifyContent: "center", 
+              width: "40%", 
+              height: "50%", 
+              zIndex: 1000, 
+              backgroundColor: themeMUI.palette.background.paper, 
+              margin: "auto",
+              borderRadius: "1rem",
+            }}
+            >
+            <Box>
+              <Typography sx={{
+                height: "fit-content",
+                margin: "auto",
+                textAlign: "center",
+              }} 
+              id="modal-modal-title" variant="h2" component="h2">
+                Poprawna odpowiedź!
+              </Typography>
+              <Box sx={{margin: "auto", width: "fit-content"}}>
+                <Button
+                  sx={{ width: "fit-content", margin: "1rem auto" }}
+                  variant="text"
+                  onClick={() => router.push(previousLesson)}
+                >
+                  Poprzednia lekcja
+                </Button>
+                <Button
+                  sx={{ width: "fit-content", margin: "1rem auto" }}
+                  variant="text"
+                  onClick={handleModalClose}
+                >
+                  Zamknij
+                </Button>
+                <Button
+                  sx={{ width: "fit-content", margin: "1rem auto" }}
+                  variant="text"
+                  onClick={() => router.push(nextLesson)}
+                >
+                  Następna lekcja
+                </Button>
+              </Box>
+            </Box>
+          </Modal>
         </>
       ) : (
         <>
@@ -368,6 +402,19 @@ const Landing = ({ codeLessonDefault }: LandingProps) => {
               {msg}
             </Alert>
           </Snackbar>
+          <Modal
+            open={true}
+            onClose={handleModalClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+            sx={{ display: "flex", alignItems: "center", justifyContent: "center", width: "40vh", height: "30vh", zIndex: 1000 }}
+            >
+            <Box>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Poprawna odpowiedź!
+              </Typography>
+            </Box>
+          </Modal>
         </>
       )}
     </>

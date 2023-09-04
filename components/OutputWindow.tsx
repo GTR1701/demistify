@@ -37,7 +37,7 @@ const OutputWindow = ({ outputDetails }: any) => {
   return (
     <>
       <Typography
-        sx={{ height: "fit-content" }}
+        sx={{ height: "fit-content", backgroundColor: "black", paddingLeft: "1rem" }}
         variant="h4"
         className="font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700 mb-2"
       >

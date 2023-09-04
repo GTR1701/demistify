@@ -1,4 +1,4 @@
-import { Lessons } from "@/types/db";
+import { ILessons } from "@/types/db";
 import axios from "axios";
 
 interface LoginData {
@@ -44,7 +44,6 @@ export async function callRegisterUser({ login, password, email }: Data) {
 }
 
 export async function callLoginUser({ login, password }: LoginData) {
-  console.log(login, password);
   const res = await axios.post("http://demistify.pl/api/auth/login", {
     login,
     password,
@@ -52,12 +51,17 @@ export async function callLoginUser({ login, password }: LoginData) {
   return res;
 }
 
-export async function fetchLessonData(lessonID: string) {
-  const res: Lessons = await axios.post(
+export async function fetchLessonData(lessonRoute: string, chapterRoute: string, courseRoute: string) {
+  const res: ILessons = await axios.post(
     "http://demistify.pl/api/lessons/data",
     {
-      lessonID,
+      lessonRoute, chapterRoute, courseRoute
     }
   );
-  return res.data;
+  return res;
+}
+
+export async function getSidebar() {
+  const res = await axios.get("http://demistify.pl/api/Sidebar");
+  return res;
 }

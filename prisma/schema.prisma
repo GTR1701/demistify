@@ -3,90 +3,60 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
-model chapters {
-  chapterID    Int          @id @default(autoincrement())
-  chapterName  Int
-  courseID     Int
-  route        String       @db.Text
-  content      String?      @db.VarChar(1000)
-  courses      courses      @relation(fields: [courseID], references: [courseID], onUpdate: Restrict, map: "chapters_ibfk_1")
-  chapternames chapternames @relation(fields: [chapterName], references: [ID], onUpdate: Restrict, map: "chapters_ibfk_2")
-  lessons      lessons[]
-
-  @@index([courseID], map: "courseID")
-  @@index([chapterName], map: "chapters_ibfk_2")
+model Courses {
+  id          String   @id @default(cuid()) @map("_id")
+  courseName  String
+  route       String
+  description String
+  price       Float
+  image       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
-model courses {
-  courseID    Int         @id @default(autoincrement())
-  courseName  Int
-  route       String      @db.Text
-  chapters    chapters[]
-  coursenames coursenames @relation(fields: [courseName], references: [ID], onUpdate: Restrict, map: "courses_ibfk_1")
-
-  @@index([courseName], map: "courses_ibfk_1")
+model Chapters {
+  id          String   @id @default(cuid()) @map("_id")
+  chapterName String
+  course      String
+  route       String
+  description String
+  image       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
-model lessons {
-  lessonID           Int         @id @default(autoincrement())
-  lessonName         Int
-  chapterID          Int
-  lessonCodeDefault  String      @default("console.log(\"Hello, World!\")") @db.VarChar(4096)
-  lessonCodeSolution String      @default("console.log(\"Hello, World!\")") @db.VarChar(4096)
-  lessonMD           String      @default("console.log(\"Hello, World!\")") @db.VarChar(4096)
-  lessonnames        lessonnames @relation(fields: [lessonID], references: [lessonNameID], onUpdate: Restrict, map: "lessons_ibfk_2")
-  chapters           chapters    @relation(fields: [chapterID], references: [chapterID], onUpdate: Restrict, map: "lessons_ibfk_3")
-
-  @@index([chapterID], map: "chapterID")
+model Lessons {
+  id                 String   @id @default(cuid()) @map("_id")
+  lessonName         String
+  chapter            String
+  route              String
+  description        String
+  codeEditorDefault  String
+  codeEditorSolution String
+  nextLesson         String
+  previousLesson     String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }
 
-model users {
-  ID        Int     @id @default(autoincrement())
-  uid       String  @db.Text
-  username  String  @db.Text
-  password  String  @db.Text
-  email     String  @db.Text
-  hasJS     Boolean @default(dbgenerated("(b'0')")) @db.Bit(1)
-  hasReact  Boolean @default(dbgenerated("(b'0')")) @db.Bit(1)
-  hasPython Boolean @default(dbgenerated("(b'0')")) @db.Bit(1)
-  hasNode   Boolean @default(dbgenerated("(b'0')")) @db.Bit(1)
+model Users {
+  id        String   @id @default(cuid()) @map("_id")
+  uuid      String   @unique
+  username  String   @unique
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-model lessonnames {
-  lessonNameID Int          @id @default(autoincrement())
-  lessonName   String       @db.Text
-  chapterID    Int
-  courseID     Int
-  route        String       @db.VarChar(255)
-  chapters     chapternames @relation(fields: [chapterID], references: [ID], onUpdate: Restrict, map: "lessonnames_ibfk_1")
-  courses      coursenames  @relation(fields: [courseID], references: [ID], onUpdate: Restrict, map: "lessonnames_ibfk_2")
-  lessons      lessons?
-
-  @@index([chapterID], map: "chapterID")
-  @@index([courseID], map: "courseID")
-}
-
-model chapternames {
-  ID          Int           @id @default(autoincrement())
-  chapterName String        @db.VarChar(100)
-  courseID    Int
-  Route       String        @db.VarChar(50)
-  coursenames coursenames   @relation(fields: [courseID], references: [ID], onUpdate: Restrict, map: "chapternames_ibfk_1")
-  chapters    chapters[]
-  lessonnames lessonnames[]
-
-  @@index([courseID], map: "courseID")
-}
-
-model coursenames {
-  ID           Int            @id @default(autoincrement())
-  courseName   String         @db.VarChar(100)
-  Route        String         @db.VarChar(50)
-  chapternames chapternames[]
-  courses      courses[]
-  lessonnames  lessonnames[]
+model Sidebar {
+  id        String   @id @default(cuid()) @map("_id")
+  name      String
+  type      String
+  childOf   String
+  route     String
 }

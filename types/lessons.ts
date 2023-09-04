@@ -1,10 +1,16 @@
 export interface CodeEditorProps {
-  lessonMD: string;
-  codeLessonDefault: string;
+  description: string;
+  codeEditorDefault: string;
+  codeEditorSolution: string;
+  nextLesson: string;
+  previousLesson: string;
 }
 
 export interface LandingProps {
-  codeLessonDefault: string;
+  codeEditorDefault: string;
+  codeEditorSolution: string;
+  nextLesson: string;
+  previousLesson: string;
 }
 
 export interface LessonObject {

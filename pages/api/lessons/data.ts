@@ -1,31 +1,45 @@
 //@ts-nocheck
 import { prisma } from "@/prisma/prisma";
-import { LessonObject } from "@/types/lessons";
+import { Lessons } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  let lessonID = parseInt(req.body.lessonID);
-  console.log(lessonID);
-  const lessonData = await prisma.lessons.findUnique({
+  const lessonRoute = req.body.lessonRoute
+  const chapterRoute = req.body.chapterRoute
+  const courseRoute = req.body.courseRoute
+
+  const courses = await prisma.courses.findMany({
     where: {
-      lessonID: lessonID,
+      route: courseRoute,
     },
   });
-  let lessonName = await prisma.lessonnames.findUnique({
+  const chapters = await prisma.chapters.findMany({
     where: {
-      lessonNameID: lessonID,
+      route: chapterRoute,
     },
   });
-  console.log(lessonData);
-  let response: LessonObject = {
-    lessonID: lessonData.lessonID,
-    lessonName: lessonName.lessonName,
-    lessonMD: lessonData.lessonMD,
-    lessonCodeDefault: lessonData.lessonCodeDefault,
-    lessonCodeSolution: lessonData.lessonCodeSolution,
-  };
-  res.status(200).send(response);
+
+  let correctChapter = null;
+
+  courses.map((course) => {
+    chapters.map((chapter) => {
+    if(course.courseName === chapter.course){
+      correctChapter = chapter
+    }
+    })
+  });
+  
+  const lesson = await prisma.lessons.findMany<Lessons>({
+    where: {
+      AND:[
+        {route: lessonRoute},
+        {chapter: correctChapter.chapterName}
+      ]
+    },
+  });
+
+  res.status(200).send(lesson);
 }

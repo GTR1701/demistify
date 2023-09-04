@@ -1,55 +1,53 @@
-export interface Chapters {
-  chapterID: number;
-  chapterName: number;
-  courseID: number;
-  route: string;
-  content: string;
+export interface ICourses {
+    id: number;
+    courseName: string;
+    route: string;
+    description: string;
+    price: number;
+    image: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
-export interface Courses {
-  courseID: number;
-  courseName: number;
-  route: string;
+export interface IChapters {
+    id: number;
+    chapterName: string;
+    course: string;
+    route: string;
+    description: string;
+    image: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
-export interface Lessons {
-  [x: string]: any;
-  lessonID: number;
-  lessonName?: number | string;
-  lessonMD: string;
-  lessonCodeDefault: string;
-  lessonCodeSolution: string;
+export interface ILessons {
+    id: string;
+    lessonName: string;
+    chapter: string;
+    route: string;
+    description: string;
+    codeEditorDefault: string;
+    codeEditorSolution: string;
+    nextLesson: string;
+    previousLesson: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
-export interface LessonNames {
-  lessonNameID: number;
-  lessonName?: string;
-  chapterID: number;
-  courseID: number;
-  route: string;
+export interface IUsers {
+    id: string;
+    uuid: string;
+    username: string;
+    email: string;
+    password: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
-export interface ChapterNames {
-  ID: number;
-  chapterName: string;
-  courseID: number;
-  Route: string;
-}
-
-export interface CourseNames {
-  ID: number;
-  courseName: string;
-  Route: string;
-}
-
-export interface User {
-  ID: number;
-  uid: string;
-  username: string;
-  password: string;
-  email: string;
-  hasJS: boolean;
-  hasReact: boolean;
-  hasPython: boolean;
-  hasNode: boolean;
+export interface ISidebar {
+    id: string;
+    name: string;
+    type: string;
+    childOf: string;
+    route: string;
 }

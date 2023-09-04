@@ -28,7 +28,6 @@ export default function Login() {
     setField2(false);
     setField1text("");
     setField2text("");
-    console.log(login, password);
     const res = await callLoginUser({ login, password });
     if (res.data === "User not found") {
       setField1(true);
@@ -37,7 +36,6 @@ export default function Login() {
       setField2(true);
       setField2text("Niepoprawne hasło");
     } else if (res.status === 200) {
-      console.log(res.data.uid, res.data.username);
       await update(res.data.uid, res.data.username).then((data) => {
         localStorage.setItem("uid", data.newUid);
         localStorage.setItem("username", data.newUsername);

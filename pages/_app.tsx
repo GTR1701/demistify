@@ -5,6 +5,13 @@ import { amber, blue, grey, purple } from "@mui/material/colors";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import type { AppProps } from "next/app";
 import { useEffect, useMemo, useState } from "react";
+import {
+  Hydrate,
+  QueryClient,
+  QueryClientProvider,
+  dehydrate,
+} from "@tanstack/react-query";
+import { getSidebar } from "@/lib/apiFunctions";
 
 const getDesignTokens = (mode: PaletteMode) => ({
   palette: {
@@ -46,6 +53,20 @@ const getDesignTokens = (mode: PaletteMode) => ({
   },
 });
 
+
+export async function getStaticProps() {
+  const queryClient = new QueryClient()
+
+  await queryClient.prefetchQuery(['Sidebar'], getSidebar)
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  }
+}
+
+
 export default function App({ Component, pageProps }: AppProps) {
   const [mode, setMode] = useState<PaletteMode>("dark");
   const colorMode = useMemo(
@@ -65,6 +86,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const [accordionState, setAccordionState] = useState(false);
   const [uid, setUid] = useState("");
   const [username, setUsername] = useState("");
+  const [queryClient] = useState(() => new QueryClient());
 
   useEffect(() => {
     setUid(localStorage.getItem("uid") || "");
@@ -72,28 +94,32 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <UserContext.Provider
-      value={{
-        uid,
-        username,
-        update: async (newUid, newUsername) => {
-          setUid(newUid);
-          setUsername(newUsername);
-          return { newUid, newUsername };
-        },
-      }}
-    >
-      <ThemeContext.Provider value={colorMode}>
-        <AccordionContext.Provider
-          value={{ accordionState, setAccordionState }}
+    <QueryClientProvider client={queryClient}>
+      <Hydrate state={pageProps.dehydratedState}>
+        <UserContext.Provider
+          value={{
+            uid,
+            username,
+            update: async (newUid, newUsername) => {
+              setUid(newUid);
+              setUsername(newUsername);
+              return { newUid, newUsername };
+            },
+          }}
         >
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Navbar />
-            <Component {...pageProps} />
-          </ThemeProvider>
-        </AccordionContext.Provider>
-      </ThemeContext.Provider>
-    </UserContext.Provider>
+          <ThemeContext.Provider value={colorMode}>
+            <AccordionContext.Provider
+              value={{ accordionState, setAccordionState }}
+            >
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Navbar />
+                <Component {...pageProps} />
+              </ThemeProvider>
+            </AccordionContext.Provider>
+          </ThemeContext.Provider>
+        </UserContext.Provider>
+      </Hydrate>
+    </QueryClientProvider>
   );
 }
